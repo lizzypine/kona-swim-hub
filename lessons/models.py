@@ -11,6 +11,9 @@ class User(models.Model):
     is_instructor = models.BooleanField(default=False)
     #course_created = models.ForeignKey(Course, on_delete=models.SET_NULL)
 
+    def __str__(self):
+        return self.first_name[:50] + " " + self.last_name[:50]
+
 class Learner(models.Model):
     #associated_with_user = models.Field.ForeignKey(User, on_delete=models.CASCADE) # When User is deleted, also delete the Learner.
     first_name = models.CharField(max_length = 100)
