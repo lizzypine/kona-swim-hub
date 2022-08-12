@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from pipes import Template
 from django.shortcuts import render
 from django.views.generic import CreateView, ListView
-from django.views.generic import ListView
+from .models import CustomUser
 
 from .forms import CustomUserCreationForm
 
@@ -14,3 +14,4 @@ class SignUpView(CreateView):
 
 class UserPageView(ListView):
     template_name = "users.html"
+    model = CustomUser # New
