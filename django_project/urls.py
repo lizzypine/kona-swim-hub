@@ -21,21 +21,6 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/", include("accounts.urls")),
     path("", include("pages.urls")),
-    # path("", include("lessons.urls")),
     path("lessons/", include("lessons.urls")),
 ]
 
-# Old urlpatterns before trying to fix signup issue
-# urlpatterns = [
-#     path("admin/", admin.site.urls),
-#     path("", include("lessons.urls")),
-#     path("accounts/", include("django.contrib.auth.urls")),
-#     path("accounts/", include("accounts.urls")),
-#     path("lessons/", include("lessons.urls")),
-#     # path("", TemplateView.as_view(template_name="home.html"), name="home"),
-#     # Are the following two necessary?
-#     # path("about/", include("lessons.urls")),
-    
-    
-    
-# ]

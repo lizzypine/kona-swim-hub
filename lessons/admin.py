@@ -1,5 +1,4 @@
 from django.contrib import admin
-# do we need the line below?
 
 
 from .models import Learner
