@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     "lessons.apps.LessonsConfig",
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
+    "bootstrap4",
+    "bootstrap_datepicker_plus",
+    "django.forms",
+    "django_filters",
+    "crispy_forms"
 ]
 
 MIDDLEWARE = [
@@ -49,7 +54,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware"
 ]
 
 ROOT_URLCONF = "django_project.urls"
@@ -64,7 +69,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+                "django.contrib.messages.context_processors.messages"
             ],
         },
     },
@@ -119,6 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [str(BASE_DIR.joinpath("static"))]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -128,4 +134,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+TIME_INPUT_FORMATS = ['%I:%M %p',]
+
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

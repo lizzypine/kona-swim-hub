@@ -1,23 +1,57 @@
 import datetime
+from bootstrap_datepicker_plus.widgets import DatePickerInput, TimePickerInput
 
-# from django.contrib.auth.forms import forms
+from django import forms
 from django.forms import ModelForm
+# from django import ModelForm
 from .models import Course
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+TIME_FORMAT = '%I:%M %p'
 
-# class CourseCreationForm(forms.Form):
 class CourseCreationForm(ModelForm):
+  course_start_time = forms.TimeField(input_formats=[TIME_FORMAT], widget=TimePickerInput(format=TIME_FORMAT))
+  course_end_time = forms.TimeField(input_formats=[TIME_FORMAT], widget=TimePickerInput(format=TIME_FORMAT))
+
   class Meta:
     model = Course
-    # fields = ['course_age_range', 'course_location', 'course_start_date']
-    fields = '__all__'
+    fields = "__all__"
+    exclude = ['course_day_of_week']
+    labels = {
+      "course_instructor": "Instructor",
+      "course_age_range_min": "Minimum age for this course",
+      "course_age_range_max": "Maximum age for this course",
+      "course_start_date": "Start date",
+      "course_end_date": "End date",
+      "course_start_time": "Start time",
+      "course_end_time": "End time",
+      "num_spots_available": "Number of spots available"
+    }
+    
+
+    widgets = {
+      # 'course_start_date':DatePickerInput().start_of('course days'), # default date-format %m/%d/%Y will be used
+      # 'course_end_date':DatePickerInput().end_of('course days'),
+      'course_start_date':DatePickerInput(), # default date-format %m/%d/%Y will be used
+      'course_end_date':DatePickerInput(),
+      # 'course_start_time':TimePickerInput(format=TIME_FORMAT).start_of('lesson time'),
+      'course_end_time':TimePickerInput(format=TIME_FORMAT),
+      # 'course_end_time':TimePickerInput(format=TIME_FORMAT).end_of('lesson time'),
+      # 'course_end_time':TimePickerInput(format='%I:%M'),
+      # 'course_start_time': TimePickerInput(
+      #   options={
+      #     "showClear": False,
+      #   }
+      # ),
+    }
+
+    # fields = ['course_start_date']
     # course_name = forms.CharField(label="Course name", MAX_LENGTH=100)
     # course_title = forms.CharField(label="Course title", max_length=100)
     # course_age_range = forms.CharField(label="Age range")
-    # course_start_date = forms.DateField(help_text="Enter the date this course begins.")
+    # course_start_date = django.forms.DateField(help_text="Enter the date this course begins.")
 
   def clean_start_date(self):
     data = self.cleaned_data['course_start_date']

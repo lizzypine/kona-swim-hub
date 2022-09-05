@@ -4,10 +4,19 @@
 
 {% block content %}
 
-<h1>Create a Course</h1>
-<form action="/lessons/course_create/" method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Submit">
-</form>
+<!-- Should this bootstrap stuff be located in base.html? Or will it bloat the site then? -->
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{{ form.media }}
+
+<body>
+  <h1>Create a Course</h1>
+  <form action="/lessons/course_create/" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" value="Submit">
+  </form>
+</body>
 {% endblock content %}

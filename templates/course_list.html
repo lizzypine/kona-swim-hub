@@ -11,12 +11,29 @@
     </div>
   </header>
 
+  <h1>Upcoming Courses</h1>
 
-  <h1>List of Courses</h1>
-  <ul>
-    {% for course in course_list %}
-    <li>{{ course.location }}</li>
-    {% endfor %}
-  </ul>
+  <table border='1' style="width:100%; text-align:center">
+    <thead>
+      <tr>
+        <th> Course Title </th>
+        <th> Location </th>
+        <th> Age </th>
+        <th> Instructor </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for course in object_list %}
+      <tr>
+        <td> {{ course.course_title }} </td>
+        <td> {{ course.course_location }} </td>
+        <td> {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</td>
+        <td> {{ course.course_instructor }} </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 </body>
 {% endblock content %}

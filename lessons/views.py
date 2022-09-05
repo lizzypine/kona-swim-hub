@@ -1,9 +1,11 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
 from .models import Course
 from .forms import CourseCreationForm
+# from filters import AgeFilter
 
 # Instructor status required to create a form.
 # @login_required
@@ -35,13 +37,22 @@ def course_create(request):
 
 class CourseListView(ListView):
     model = Course
-    # template_name = 'lessons/course_list.html'
     template_name = 'course_list.html'
-    context_object_name = 'course' # what does this do?
+    # context_object_name = 'course' # what does this do?
+
+    def get_course_list(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # age_filter = AgeFilter(request.GET)
+        # return render(request, 'course_list.html', {'age_filter':age_filter})
+        return context
+
+# experiment with range filter
+    # def index(request):
+    #     all_courses = Course.objects.all()
+    #     return render(request, 'course_list.html', {'all_course':all_courses})
 
 class CourseDetailView(DetailView):
     model = Course
-    # template_name = 'lessons/course_detail.html'
     template_name = 'course_detail.html'
     context_object_name = 'course' # what does this do?
 
