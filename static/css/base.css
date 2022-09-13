@@ -1,21 +1,7 @@
-/* h1 {
-  color: pink;
-} */
-
-/* body>div.container>main>h1 {
-  color: orange;
-} */
-
-/* body>div.container>header>div>a {
-  padding-right: 5px;
-} */
-
-.nav {
-  width: 20%;
-  justify-content: space-between;
-  padding-bottom: 1.5em;
+.courses {
+  padding-top: 1em;
 }
 
-.courses {
+.course-table-container {
   padding-top: 1em;
 }

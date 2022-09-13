@@ -1,6 +1,5 @@
 import datetime
 from bootstrap_datepicker_plus.widgets import DatePickerInput, TimePickerInput
-
 from django import forms
 from django.forms import ModelForm
 # from django import ModelForm
@@ -29,7 +28,6 @@ class CourseCreationForm(ModelForm):
       "course_end_time": "End time",
       "num_spots_available": "Number of spots available"
     }
-    
 
     widgets = {
       # 'course_start_date':DatePickerInput().start_of('course days'), # default date-format %m/%d/%Y will be used
@@ -46,12 +44,6 @@ class CourseCreationForm(ModelForm):
       #   }
       # ),
     }
-
-    # fields = ['course_start_date']
-    # course_name = forms.CharField(label="Course name", MAX_LENGTH=100)
-    # course_title = forms.CharField(label="Course title", max_length=100)
-    # course_age_range = forms.CharField(label="Age range")
-    # course_start_date = django.forms.DateField(help_text="Enter the date this course begins.")
 
   def clean_start_date(self):
     data = self.cleaned_data['course_start_date']

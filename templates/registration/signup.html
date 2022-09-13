@@ -3,9 +3,16 @@
 {% block title %}Sign Up | Kona Swim Hub{% endblock title%}
 
 {% block content %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{{ form.media }}
+
 <h2>Sign Up</h2>
 <form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-success">Sign Up</button>
 </form>
 {% endblock content %}

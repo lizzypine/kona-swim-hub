@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import CourseListView, CourseDetailView, ThanksPageView
+from lessons.views import CourseListView, CourseDetailView, ThanksPageView, CourseDetailView
 # How is the line below different from the line above?
-from . import views
+from lessons import views
 # experiment
 
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     path("course_create/", views.course_create, name="course_create"),
     path("<int:pk>/", CourseDetailView.as_view(), name="course_detail"),
     path("course_create/thanks/", ThanksPageView.as_view(), name="thanks"),
+    path("course_detail/<int:pk>", CourseDetailView.as_view(), name="course_detail")
     # experiment
     # path("", index)
 ]
