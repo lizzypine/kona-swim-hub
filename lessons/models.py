@@ -1,21 +1,12 @@
 from django.conf import settings # new to get list of courses to work
 from django.db import models
 from django.urls import reverse
+from accounts.models import CustomUser, Learner
 
 Course = settings.AUTH_USER_MODEL # new to get list of courses to work
 
-class Learner(models.Model):
-    associated_with_user = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, default=None)
-    first_name = models.CharField(max_length = 100)
-    last_name = models.CharField(max_length = 100)
-    birthday = models.DateField()
-    enrolled_in_course = models.ManyToManyField('Course', related_name="courses", default=None, blank=True)
-    learner_on_waitlist = models.ManyToManyField('Waitlist', related_name="waitlists", default=None, blank=True)
-    def __str__(self):
-        return self.first_name[:50] + " " + self.last_name[:50]
-
 class Course(models.Model):
-    course_instructor = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, null=True) # Check this: When User is deleted, also delete the Course. 
+    course_instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True) # Check this: When User is deleted, also delete the Course. 
     course_title = models.CharField(max_length=100, default=None)
     course_description = models.CharField(max_length=250)
     course_age_range_min = models.IntegerField(null=True)
@@ -24,7 +15,6 @@ class Course(models.Model):
     course_start_date = models.DateField(help_text="Enter the date this course will begin.")
     course_end_date = models.DateField(help_text="Enter the date this course will end.")
     course_day_of_week = models.CharField(max_length=100)
-    # course_day_of_week = models.ManyToManyField(models.self, DAY_CHOICES)
     course_start_time = models.TimeField(help_text="Enter the start time for this course (e.g., 01:00 PM)")
     course_end_time = models.TimeField(help_text="Enter the end time for this course (e.g., 02:00 PM)")
     num_spots_available = models.IntegerField()
@@ -36,9 +26,9 @@ class Course(models.Model):
         return reverse("course_detail", kwargs={"pk": self.pk})
 
 class Waitlist(models.Model):  
-    course_instructor = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, null=True)
+    course_instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     associated_course = models.ForeignKey('Course', null=True, on_delete=models.CASCADE)
-    listed_on_waitlist = models.ManyToManyField('Learner', related_name="waitlists", blank=True)
+    listed_on_waitlist = models.ManyToManyField(Learner, related_name="waitlists", blank=True)
 
 
 

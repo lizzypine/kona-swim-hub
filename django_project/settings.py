@@ -138,4 +138,6 @@ TIME_INPUT_FORMATS = ['%I:%M %p',]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
+AUTH_PROFILE_MODULE = "accounts.UserProfile"
+
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

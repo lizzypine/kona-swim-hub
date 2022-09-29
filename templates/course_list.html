@@ -39,9 +39,11 @@
     </table>
   </div>
 
+  {% if user.is_instructor %}
   <div>
     <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
   </div>
+  {% endif %}
 
 </body>
 {% endblock content %}
