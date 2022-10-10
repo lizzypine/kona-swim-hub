@@ -10,13 +10,6 @@ from accounts.models import Learner
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 
-
-# @login_required
-# def profile(request):
-#     return render(request, 'profile.html')
-#     # return render(request, 'users/profile.html')
-#     # return render(request, 'profile.html')
-
 class ProfileUpdateView(DetailView):
     model = Learner
     template_name = 'course_detail.html'
@@ -38,9 +31,6 @@ class UserChangeView(CreateView):
 
 @login_required
 def learners_list(request):
-
-    #Learner.objects.filter(associated_with_user=request.user)
-    # Learner.objects.filter(associated_with_user='Lizzy Pine')
     
     data = {
         "learners": Learner.objects.filter(associated_with_user=request.user),
@@ -54,7 +44,7 @@ def learner_add(request):
     # If this is a POST request then process the Form data
     if request.method == "POST":
 
-        # Create a form instance and populate it with data from the request (binding):
+        # Create a form instance and populate it with data from the request (binding data to the form):
         form = LearnerAddForm(request.POST)
 
         # Check if the form is valid:
@@ -65,16 +55,6 @@ def learner_add(request):
 
             # Commit the data and redirect to the 'my learners' page. 
             form.instance.save()
-
-            # I may not need this. I could try just querying all the learner objects that belong to a particular user.
-
-            # Update the associated_with_learner field on the parent user object to include this learner instance's pk.
-            # parent_user = request.user
-            # parent_user.associated_with_learner = form.instance.pk
-
-            # parent_user = CustomUser.objects.get(pk=request.user)
-            # parent_user.associated_with_learner = form.instance.pk
-            # parent_user.save(update_fields=['associated_with_learner'])
 
             return HttpResponseRedirect('../mylearners')
             

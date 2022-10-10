@@ -24,7 +24,7 @@
           <tr>
             <th> Name </th>
             <th> Birthdate </th>
-            <!-- <th> Enrolled in Courses </th> -->
+            <th> Enrolled in Courses </th>
           </tr>
         </thead>
 
@@ -35,11 +35,14 @@
           <tr>
             <td> {{ learner.first_name }} </td>
             <td> {{ learner.birthday }} </td>
-            <!-- {% if learner.enrolled_in_course == Blank %}
-            <td>Not enrolled in any courses</td>
+            {% if learner.enrolled_in_course == Blank %}
+
+            TRY A QUERY HERE ON COURSES THAT CHECKS FOR 'LEARNERS' THAT ARE ASSOCIATED WITH THIS USER.
+
+            <td> Not enrolled in any courses</td>
             {% else %}
             <td> {{ learner.enrolled_in_course }}</td>
-            {% endif %} -->
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>

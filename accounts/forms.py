@@ -27,9 +27,3 @@ class LearnerAddForm(ModelForm):
   def send_email(self):
     # send email using the self.cleaned_data dictionary
     pass
-
-
-# class CustomUserChangeForm(UserChangeForm):
-#     class Meta:
-#         model = CustomUser
-#         fields = UserChangeForm.Meta.fields
