@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}My Learners | Kona Swim Hub{% endblock title%}
+{% block title %}{{ learner.first_name }} | Kona Swim Hub{% endblock title%}
 
 {% block content %}
 
@@ -11,9 +11,8 @@
 {{ form.media }}
 
 <body>
-  <h1>Hi, {{ user.first_name }} {{ user.last_name }}!</h1>
 
-  <h2>My Learners</h2>
+  <h2>{{ learner.first_name }}</h2>
   <div class="row my-3 p-3">
 
     <div class="course-table-container">
@@ -23,18 +22,27 @@
         <thead>
           <tr>
             <th> Name </th>
+            <th> Birthdate </th>
+            <th> Enrolled in Courses </th>
           </tr>
         </thead>
 
         <tbody>
 
-          {% for learner in learners %}
-
           <tr>
-            <td><a href="{% url 'learner-detail' learner.pk %}"">{{ learner.first_name }} {{ learner.last_name}}</a></td>
+            <td> {{ learner.first_name }} {{ learner.last_name}} </td>
+
+            <td> {{ learner.birthday }} </td>
+
+            <td>
+              {% for course in courselist %}
+              <p> {{ course.course_title }} </p>
+              {% empty %}
+              <p>Not enrolled in any courses.</p>
+              {% endfor %}
+            </td>
 
           </tr>
-          {% endfor %}
         </tbody>
       </table>
     </div>
@@ -43,7 +51,7 @@
 
   <div>
     <a href=" {% url 'learner-add' %}" class="btn btn-primary" role="button">Add a Learner</a>
-    </div>
+  </div>
 
 </body>
 

@@ -37,7 +37,6 @@ def course_create(request):
 class CourseListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = 'course_list.html'
-    # context_object_name = 'course' # what does this do?
 
     def get_course_list(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,7 +73,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         learner_on_roster=learner.id
         instance.learner_on_roster.add(learner_on_roster)
 
-        # Update the number of spots available once this learner registers.
+        # Update the number of spots that will be available after this learner registers.
         instance.num_spots_available = instance.num_spots_available - 1
 
         form.save_m2m()

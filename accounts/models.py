@@ -18,8 +18,6 @@ class Learner(models.Model):
     first_name = models.CharField(max_length = 100)
     last_name = models.CharField(max_length = 100)
     birthday = models.DateField()
-    # enrolled_in_course = models.ManyToManyField('lessons.Course', related_name="courses", default=None, blank=True)
-    # learner_on_waitlist = models.ManyToManyField('lessons.Waitlist', related_name="waitlists", default=None, blank=True)
     def __str__(self):
         return self.first_name[:50] + " " + self.last_name[:50]
 

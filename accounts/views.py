@@ -1,19 +1,18 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
-from accounts.models import CustomUser
+from accounts.models import CustomUser, Learner
+from lessons.models import Course
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm
-from accounts.models import Learner
-# from lessons.models import Course
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 
 class ProfileUpdateView(DetailView):
     model = Learner
     template_name = 'course_detail.html'
-    context_object_name = 'course' # what does this do?
+    context_object_name = 'course'
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
@@ -29,14 +28,30 @@ class UserChangeView(CreateView):
     success_url = reverse_lazy("profile")
     template_name = "profile.html"
 
+# My Learners page
 @login_required
 def learners_list(request):
-    
-    data = {
-        "learners": Learner.objects.filter(associated_with_user=request.user),
+
+    learners = Learner.objects.filter(associated_with_user=request.user)
+
+    context = {
+        "learners": learners,
     }
 
-    return render(request, "mylearners.html", data)
+    return render(request, "mylearners.html", context)
+
+# Learner detail page
+class LearnerDetailView(LoginRequiredMixin, DetailView):
+    model = Learner
+    template_name = 'learner-detail.html'
+    context_object_name = 'learner'
+    # queryset = Course.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Filters courses to where this learner is on the roster
+        context['courselist'] = Course.objects.filter(learner_on_roster=self.kwargs['pk']).values('course_title')
+        return context
 
 @login_required
 def learner_add(request):
