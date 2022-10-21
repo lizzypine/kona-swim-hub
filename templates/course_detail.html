@@ -19,7 +19,8 @@
 
   <h3> Number of spots available: {{ course.num_spots_available }} </h3>
 
-  <div>
+  <div class="text-start">
+    <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
     <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-success"
       role="button">Register</a>
   </div>

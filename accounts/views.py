@@ -111,6 +111,14 @@ def learner_add(request):
     #     # return render(request, 'lessons/course_new.html', {'form': form})
     #     return render(request, 'mylearners.html', {'form': form})
 
+class LearnerUpdateView(LoginRequiredMixin, CreateView):
+    model = Learner
+    template_name = 'learner-update.html'
+    context_object_name = 'learner'
+    form_class = LearnerAddForm
+    # fields = '__all__'
+    success_url = '../../accounts/mylearners'
+
 # Create your views here.
 # class SignUpView(CreateView):
 #     form_class = UserCreationForm
