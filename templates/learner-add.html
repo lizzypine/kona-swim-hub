@@ -4,13 +4,9 @@
 
 {% block content %}
 
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
-
 {{ form.media }}
 
-<body>
+<div class="container">
   <h1>Hi, {{ user.first_name }} {{ user.last_name }}!</h1>
 
   <h2>Add a learner</h2>
@@ -21,6 +17,6 @@
     <input type="submit" class="btn btn-success">
   </form>
 
-</body>
+</div>
 
 {% endblock content %}

@@ -4,15 +4,13 @@
 
 {% block content %}
 
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+<!-- {{ form.media }} -->
 
-{{ form.media }}
-
-<h2>Sign Up</h2>
-<form method="post">{% csrf_token %}
-    {% bootstrap_form form %}
-    <button type="submit" class="btn btn-success">Sign Up</button>
-</form>
+<div class="container">
+    <h2>Sign Up</h2>
+    <form method="post">{% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-success">Sign Up</button>
+    </form>
+</div>
 {% endblock content %}

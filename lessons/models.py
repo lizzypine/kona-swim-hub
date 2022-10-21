@@ -18,7 +18,6 @@ class Course(models.Model):
     course_start_time = models.TimeField(help_text="Enter the start time for this course (e.g., 01:00 PM)")
     course_end_time = models.TimeField(help_text="Enter the end time for this course (e.g., 02:00 PM)")
     num_spots_available = models.IntegerField()
-    # learner_on_roster = models.ManyToManyField(to=Learner, related_name="learners", default=1, blank=True)
     learner_on_roster = models.ManyToManyField(to=Learner, related_name="learners", blank=True)
     def __str__(self):
         return self.course_title[:50]

@@ -42,9 +42,6 @@ class CourseCreationForm(ModelForm):
 form = CourseCreationForm
 
 class CourseRegistrationForm(forms.ModelForm):
-    # parent = forms.CharField(label='Your name', max_length=100, initial={'parent.first_name'})
-    # user = forms.ModelChoiceField(label='user', widget=forms.RadioSelect, queryset=None, initial={'user'})
-
     # Check that the learner is not already registered for this course.
     # def clean_learner_data(self):
     #   data = self.cleaned_data['learner']
@@ -76,11 +73,6 @@ class CourseRegistrationForm(forms.ModelForm):
         widget=forms.RadioSelect,
         required=True,
     )
-
-    # learner_on_roster = forms.CharField(
-    #     label='Select a learner',
-    #     widget=forms.Select(choices=learner_choices)
-    # )
 
     # Remove once form is working correctly.
     num_spots_available = forms.CharField(

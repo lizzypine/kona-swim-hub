@@ -4,25 +4,28 @@
 
 {% block content %}
 
-<body>
+<div class="container">
 
-  <h1>Course Details</h1>
+  <body>
 
-  <h2> Course Title: {{ course.course_title }} </h2>
-  <h3> Location: {{ course.course_location }} </h3>
-  <h3> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }} </h3>
-  <h3> Instructor: {{ course.course_instructor }} </h3>
-  <p> {{ course.course_description }} </p>
+    <h1>Course Details</h1>
 
-  <h3> {{ course.course_start_date }} to {{ course.course_end_date }} </h3>
-  <h3> {{ course.course_start_time }} - {{ course.course_end_time }} </h3>
+    <h2> Course Title: {{ course.course_title }} </h2>
+    <h3> Location: {{ course.course_location }} </h3>
+    <h3> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }} </h3>
+    <h3> Instructor: {{ course.course_instructor }} </h3>
+    <p> {{ course.course_description }} </p>
 
-  <h3> Number of spots available: {{ course.num_spots_available }} </h3>
+    <h3> {{ course.course_start_date }} to {{ course.course_end_date }} </h3>
+    <h3> {{ course.course_start_time }} - {{ course.course_end_time }} </h3>
 
-  <div class="text-start">
-    <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
-    <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-success"
-      role="button">Register</a>
-  </div>
-</body>
+    <h3> Number of spots available: {{ course.num_spots_available }} </h3>
+
+    <div class="text-start">
+      <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
+      <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-success"
+        role="button">Register</a>
+    </div>
+  </body>
+</div>
 {% endblock content %}

@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
+# from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 class ProfileUpdateView(DetailView):
     model = Learner
@@ -53,6 +54,7 @@ class LearnerDetailView(LoginRequiredMixin, DetailView):
         context['courselist'] = Course.objects.filter(learner_on_roster=self.kwargs['pk']).values('course_title')
         return context
 
+# Add a learner page
 @login_required
 def learner_add(request):
     
@@ -78,46 +80,18 @@ def learner_add(request):
 
     return TemplateResponse(request, "learner-add.html", {'form': form})
 
-
-        # if 'preview' in request.POST:
-        #     # do preview thing...
-    
-    # return TemplateResponse(request, "learner-add.html", {'form': form})
-
-
-    #I want to import my LearnerAddForm into this LearnerListView
-    # def learner_add(request):
-
-    #     # If this is a POST request then process the Form data
-    #     if request.method == "POST":
-            
-    #         # Create a form instance and populate it with data from the request (binding):
-    #         form = LearnerAddForm(request.POST)
-
-    #         # Check if the form is valid:
-    #         if form.is_valid():
-    #             # Process the data and redirect to the 'my learners' page. 
-    #             form.save()
-    #             return HttpResponseRedirect('/mylearners/')
-
-    #         # Save a new learner object from the form's data.
-    #         # KEEP THIS?
-            
-        
-    #     # Else, this is a GET request (or any other method). Create the default form.
-    #     else:
-    #         form = LearnerAddForm()
-
-    #     # return render(request, 'lessons/course_new.html', {'form': form})
-    #     return render(request, 'mylearners.html', {'form': form})
-
-class LearnerUpdateView(LoginRequiredMixin, CreateView):
+# Update a learner page
+class LearnerUpdateView(LoginRequiredMixin, UpdateView):
     model = Learner
     template_name = 'learner-update.html'
     context_object_name = 'learner'
-    form_class = LearnerAddForm
-    # fields = '__all__'
+    fields = ('first_name', 'last_name', 'birthday')
+    # form_class: LearnerAddForm
     success_url = '../../accounts/mylearners'
+
+    # widgets = {
+    #   'birthday':DatePickerInput(),
+    # }
 
 # Create your views here.
 # class SignUpView(CreateView):

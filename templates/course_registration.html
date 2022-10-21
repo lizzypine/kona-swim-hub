@@ -2,15 +2,12 @@
 
 {% block title %}Register for a Course | Kona Swim Hub{% endblock title%}
 
+<!-- {{ form.media }} -->
+
 {% block content %}
 
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+<div class="container">
 
-{{ form.media }}
-
-<body>
 
   <h1>Register for {{ course.course_title }} </h1>
 
@@ -28,10 +25,12 @@
   <form action="" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
+    {% buttons %}
     <a href="{% url 'course_detail' course.pk %}" class="btn btn-outline-primary me-2">Back</a>
     <input type="Submit" class="btn btn-success">
+    {% endbuttons %}
   </form>
-</body>
 
+</div>
 
-{% endblock content %}
+{% endblock %}

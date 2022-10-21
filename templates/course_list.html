@@ -8,43 +8,44 @@
   <header>
 
   </header>
+  <div class="container">
+    <h1>Upcoming Courses</h1>
 
-  <h1>Upcoming Courses</h1>
 
-  <div class="course-table-container">
+    <div class="course-table-container">
 
-    <table class="table table-bordered table-hover">
-      <thead>
-        <tr>
-          <th> Course Title </th>
-          <th> Location </th>
-          <th> Age </th>
-          <th> Instructor </th>
-          <th> Description </th>
-        </tr>
-      </thead>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th> Course Title </th>
+            <th> Location </th>
+            <th> Age </th>
+            <th> Instructor </th>
+            <th> Description </th>
+          </tr>
+        </thead>
 
-      <tbody>
-        {% for course in object_list %}
-        <tr>
-          <td><a href="{% url 'course_detail' course.pk %}">{{ course.course_title }}</a></td>
-          <td> {{ course.course_location }} </td>
-          <td> {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</td>
-          <td> {{ course.course_instructor }} </td>
-          <td> {{ course.course_description }} </td>
-        </tr>
-        {% empty %}
-        <h3>Create the first course!</h3>
-        {% endfor %}
-      </tbody>
-    </table>
+        <tbody>
+          {% for course in object_list %}
+          <tr>
+            <td><a href="{% url 'course_detail' course.pk %}">{{ course.course_title }}</a></td>
+            <td> {{ course.course_location }} </td>
+            <td> {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</td>
+            <td> {{ course.course_instructor }} </td>
+            <td> {{ course.course_description }} </td>
+          </tr>
+          {% empty %}
+          <h3>Create the first course!</h3>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if user.is_instructor %}
+    <div>
+      <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
+    </div>
+    {% endif %}
   </div>
-
-  {% if user.is_instructor %}
-  <div>
-    <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
-  </div>
-  {% endif %}
-
 </body>
 {% endblock content %}

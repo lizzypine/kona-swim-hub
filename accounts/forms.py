@@ -7,7 +7,7 @@ from lessons.models import Learner
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = UserCreationForm.Meta.fields + ("email", "first_name", "last_name",)
+        fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:

@@ -4,14 +4,9 @@
 
 {% block content %}
 
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
-
 {{ form.media }}
 
-<body>
-
+<div class="container">
   <h2>{{ learner.first_name }}</h2>
   <div class="row my-3 p-3">
 
@@ -54,6 +49,6 @@
     <a href="{% url 'learner-update' learner.pk %}" class="btn btn-primary">Edit Learner</a>
   </div>
 
-</body>
+</div>
 
 {% endblock content %}

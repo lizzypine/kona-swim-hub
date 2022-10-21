@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "lessons.apps.LessonsConfig",
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
-    "bootstrap4",
+    "bootstrap5",
     "bootstrap_datepicker_plus",
     "django.forms",
     "django_filters",
