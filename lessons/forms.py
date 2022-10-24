@@ -27,6 +27,7 @@ class CourseCreationForm(ModelForm):
         widgets = {
         'course_start_date':DatePickerInput(),
         'course_end_date':DatePickerInput(),
+        'course_start_time':TimePickerInput(format=TIME_FORMAT),
         'course_end_time':TimePickerInput(format=TIME_FORMAT),
         }
 

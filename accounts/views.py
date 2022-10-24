@@ -28,17 +28,19 @@ class UserChangeView(CreateView):
     success_url = reverse_lazy("profile")
     template_name = "profile.html"
 
-# My Learners page
+# My Account Page
 @login_required
-def learners_list(request):
+def my_account_view (request):
 
     learners = Learner.objects.filter(associated_with_user=request.user)
+    courses = Course.objects.filter(course_instructor=request.user)
 
     context = {
         "learners": learners,
+        "courses": courses,
     }
 
-    return render(request, "mylearners.html", context)
+    return render(request, "my-account.html", context)
 
 # Learner detail page
 class LearnerDetailView(LoginRequiredMixin, DetailView):
