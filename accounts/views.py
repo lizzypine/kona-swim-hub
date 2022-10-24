@@ -1,14 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
-# from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 class ProfileUpdateView(DetailView):
     model = Learner
@@ -81,16 +80,45 @@ def learner_add(request):
     return TemplateResponse(request, "learner-add.html", {'form': form})
 
 # Update a learner page
-class LearnerUpdateView(LoginRequiredMixin, UpdateView):
+@ login_required
+def learner_update(request, pk):
+
+    context = {}
+
+    obj = get_object_or_404(Learner, pk = pk)
+
+    form = LearnerAddForm(request.POST or None, instance = obj)
+
+    # Check if the form is valid:
+    if form.is_valid():
+
+        # Commit the data and redirect to the 'my learners' page. 
+        form.save()
+        return HttpResponseRedirect('../mylearners')
+    
+    # Add form dictionary to context
+    context['form'] = form
+
+    return TemplateResponse(request, "learner-update.html", context)
+
+# Learner delete 
+class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Learner
-    template_name = 'learner-update.html'
-    context_object_name = 'learner'
-    fields = ('first_name', 'last_name', 'birthday')
-    # form_class: LearnerAddForm
-    success_url = '../../accounts/mylearners'
+    template_name = 'learner_confirm_delete.html'
+    success_url = '../../mylearners'
+
+# class LearnerUpdateView(LoginRequiredMixin, UpdateView):
+#     model = Learner
+#     template_name = 'learner-update.html'
+#     context_object_name = 'learner'
+#     # fields = ('first_name', 'last_name', 'birthday')
+#     fields = '__all__'
+#     exclude = ['associated_with_user']
+#     form_class: LearnerAddForm
+#     success_url = '../../accounts/mylearners'
 
     # widgets = {
-    #   'birthday':DatePickerInput(),
+    #   'birthday': DatePickerInput(),
     # }
 
 # Create your views here.

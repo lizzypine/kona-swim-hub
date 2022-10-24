@@ -47,8 +47,15 @@
   <div class="text-start">
     <a href="{% url 'mylearners' %}" class="btn btn-outline-primary me-2">Back</a>
     <a href="{% url 'learner-update' learner.pk %}" class="btn btn-primary">Edit Learner</a>
-    <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger">Delete</a>
   </div>
+
+  <div class="alert alert-danger" style="margin-top: 1.5em;" role="alert">
+    <form method="post">{% csrf_token %}
+      <h4>Are you sure you want to delete "{{ learner }}"?</h4>
+      <input type="submit" class="btn btn-danger" value="Confirm">
+    </form>
+  </div>
+
 
 </div>
 

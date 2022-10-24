@@ -62,25 +62,16 @@ class CourseRegistrationForm(forms.ModelForm):
     class Meta:
         model = Course
         # fields = ['id', 'num_spots_available']
-        fields = ['id', 'learner_on_roster', 'num_spots_available']
+        fields = ['id', 'learner_on_roster']
         exclude = ['course_instructor', 'learner_on_roster', 'course_title', 'course_description', 'course_age_range_min', 'course_age_range_max',
             'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time']
 
-    
+
     learner = forms.ModelChoiceField(
         label='Select a Learner',
         queryset=Learner.objects.order_by('first_name'),
         widget=forms.RadioSelect,
         required=True,
-    )
-
-    # Remove once form is working correctly.
-    num_spots_available = forms.CharField(
-        widget=forms.TextInput(attrs={'readonly':'readonly'})
-    )
-
-    id = forms.CharField(
-        widget=forms.TextInput(attrs={'readonly':'readonly'})
     )
 
   # def save(self, commit=True):

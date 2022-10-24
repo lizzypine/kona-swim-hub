@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load bootstrap5 %}
 
 {% block title %}Add a Learner | Kona Swim Hub{% endblock title%}
 
 {% block content %}
-
+<script src="//code.jquery.com/jquery.min.js"></script>
 {{ form.media }}
 
 <div class="container">
@@ -14,7 +15,7 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     <a href="{% url 'mylearners' %}" class="btn btn-outline-primary me-2">Back</a>
-    <input type="submit" class="btn btn-success">
+    <input type="submit" class="btn btn-success" value="Submit">
   </form>
 
 </div>

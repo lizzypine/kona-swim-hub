@@ -17,11 +17,10 @@ class CustomUserChangeForm(UserChangeForm):
 class LearnerAddForm(ModelForm):
   class Meta:
     model = Learner
-    fields = '__all__'
+    fields = ['birthday', 'first_name', 'last_name']
     exclude = ['enrolled_in_course', 'learner_on_waitlist', 'associated_with_user']
-
     widgets = {
-      'birthday':DatePickerInput(),
+      'birthday': DatePickerInput()
     }
 
   def send_email(self):
