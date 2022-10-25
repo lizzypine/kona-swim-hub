@@ -10,6 +10,7 @@ urlpatterns = [
     path('learner-update/<int:pk>', views.learner_update, name='learner-update'),
     path('<pk>/delete/', LearnerDeleteView.as_view(), name='learner-delete'),
     path("my-account/", views.my_account_view, name="my-account"),
+    # path('<pk>/course-confirm-delete/', CourseDeleteView.as_view(), name='course-confirm-delete'),
     # path('profile/', UserChangeView.as_view(), name='profile')
     # path('profile/', LearnerListView.as_view(), name='profile')
     # path('profile/', views.learner_create, name='profile'),

@@ -10,6 +10,14 @@ TIME_FORMAT = '%I:%M %p'
 
 class CourseCreationForm(ModelForm):
 
+    course_start_time = forms.TimeField(input_formats=[TIME_FORMAT],
+        widget=TimePickerInput(format=TIME_FORMAT)
+    )
+
+    course_end_time = forms.TimeField(input_formats=[TIME_FORMAT],
+        widget=TimePickerInput(format=TIME_FORMAT)
+    )
+
     class Meta:
         model = Course
         fields = '__all__'
@@ -25,20 +33,16 @@ class CourseCreationForm(ModelForm):
         }
 
         widgets = {
-        'course_start_date':DatePickerInput(),
-        'course_end_date':DatePickerInput(),
-        'course_start_time':TimePickerInput(format=TIME_FORMAT),
-        'course_end_time':TimePickerInput(format=TIME_FORMAT),
+        'course_start_date': DatePickerInput(),
+        'course_end_date': DatePickerInput(),
         }
 
-    def clean_start_date(self):
-        data = self.cleaned_data['course_start_date']
+    # def clean_time(self):
+    #     course_start_time = self.cleaned_data['course_start_time']
 
         # # Check that start date is not in the past.
         # if data < datetime.date.today():
         #   raise ValidationError(_('Invalid date - start date in the past'))
-
-        # return data
 
 form = CourseCreationForm
 

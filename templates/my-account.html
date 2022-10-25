@@ -4,8 +4,6 @@
 
 {% block content %}
 
-<!-- {{ form.media }} -->
-
 <div class="container">
   <h1>Hi, {{ user.first_name }} {{ user.last_name }}!</h1>
 
@@ -54,21 +52,25 @@
             <tbody>
               <tr>
                 {% for course in courses %}
-                <td><a href="{% url 'course_detail' course.pk %}"">{{ course.course_title }}</a></td>
-            </tr>
-            {% empty %}
-            <h3>You haven't created any courses yet.</h3>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <div>
-      <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
+                <td>
+                  <p>{{ course.course_title }} </p> <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning"
+                    role="button">Edit</a>
+                  <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+              </tr>
+              {% empty %}
+              <h3>You haven't created any courses yet.</h3>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      <div>
+        <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
+      </div>
     </div>
+  </div>
 
 
-    {% endblock content %}
+  {% endblock content %}

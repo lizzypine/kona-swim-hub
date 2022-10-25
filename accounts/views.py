@@ -107,7 +107,7 @@ def learner_update(request, pk):
 class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Learner
     template_name = 'learner_confirm_delete.html'
-    success_url = '../../mylearners'
+    success_url = '../../my-account'
 
 # class LearnerUpdateView(LoginRequiredMixin, UpdateView):
 #     model = Learner

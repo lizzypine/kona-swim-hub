@@ -14,16 +14,18 @@ class Course(models.Model):
     course_location = models.CharField(max_length=100) 
     course_start_date = models.DateField(help_text="Enter the date this course will begin.")
     course_end_date = models.DateField(help_text="Enter the date this course will end.")
-    course_day_of_week = models.CharField(max_length=100)
-    course_start_time = models.TimeField(help_text="Enter the start time for this course (e.g., 01:00 PM)")
-    course_end_time = models.TimeField(help_text="Enter the end time for this course (e.g., 02:00 PM)")
+    course_day_of_week = models.CharField(max_length=100, blank=True)
+    course_start_time = models.TimeField(help_text="Enter the start time for this course in Hawaii Standard Time (e.g., 01:00 PM).")
+    course_end_time = models.TimeField(help_text="Enter the end time for this course in Hawaii Standard Time(e.g., 02:00 PM).")
     num_spots_available = models.IntegerField()
+    course_price = models.DecimalField(max_digits=10, decimal_places=2)
     learner_on_roster = models.ManyToManyField(to=Learner, related_name="learners", blank=True)
     def __str__(self):
         return self.course_title[:50]
     
     def get_absolute_url(self):
         return reverse("course_detail", kwargs={"pk": self.pk})
+        
 
 class Waitlist(models.Model):  
     course_instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)

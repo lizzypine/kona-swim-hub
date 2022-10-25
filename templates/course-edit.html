@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block title %}Edit {{ course.course_title }} | Kona Swim Hub{% endblock title%}
+
+{% block content %}
+
+<script src="//code.jquery.com/jquery.min.js"></script>
+{{ form.media }}
+
+<div class="container">
+
+  <body>
+
+    <h2>Update {{ course.course_title }}</h2>
+
+    <div class="container">
+      <form action="" class="form-horizontal" method="post">
+        {% csrf_token %}
+
+        <div class="row g-3">
+          <div class="course-table-container">
+            {% bootstrap_form form %}
+          </div>
+        </div>
+        <div class="text-start">
+          <a href="{% url 'my-account' %}" class="btn btn-outline-primary me-2">Back</a>
+          <input type="submit" value="Update" class="btn btn-success">
+        </div>
+      </form>
+    </div>
+
+  </body>
+</div>
+{% endblock content %}

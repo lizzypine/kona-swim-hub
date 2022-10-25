@@ -1,10 +1,11 @@
 from django.http import HttpResponseRedirect
-from django.views.generic import ListView, DetailView, TemplateView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from lessons.models import Course
 from lessons.forms import CourseCreationForm, CourseRegistrationForm
 from django.template.response import TemplateResponse
+from django.shortcuts import get_object_or_404
 # from django.urls import reverse
 # from filters import AgeFilter
 
@@ -29,7 +30,7 @@ def course_create(request):
             return HttpResponseRedirect('thanks/')
 
     else:
-        form = CourseCreationForm()
+        form = CourseCreationForm() 
 
     # return render(request, 'lessons/course_new.html', {'form': form})
     return TemplateResponse(request, 'course_create.html', {'form': form})
@@ -48,6 +49,66 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = 'course_detail.html'
     context_object_name = 'course'
+
+# class CourseUpdateView(LoginRequiredMixin, UpdateView):
+#     model = Course
+#     template_name = 'course-edit.html'
+#     context_object_name = 'course'
+#     fields = '__all__'
+
+@ login_required
+def course_update(request, pk):
+
+    context = {}
+
+    obj = get_object_or_404(Course, pk = pk)
+
+    form = CourseCreationForm(request.POST or None, instance = obj)
+
+    # Check if the form is valid:
+    if form.is_valid():
+
+        # Commit the data and redirect to the 'my learners' page. 
+        form.save()
+        return HttpResponseRedirect('../../accounts/my-account')
+    
+    # Add form dictionary to context
+    context['form'] = form
+
+    return TemplateResponse(request, 'course-edit.html', context)
+
+class CourseDeleteView(LoginRequiredMixin, DeleteView):
+    model = Course
+    template_name = 'course-delete.html'
+    success_url = '../accounts/my-account'
+
+# def course_delete(request, pk):
+
+#     context = {}
+
+#     obj = get_object_or_404(Course, pk = pk)
+
+# Update a learner page
+# @ login_required
+# def learner_update(request, pk):
+
+#     context = {}
+
+#     obj = get_object_or_404(Learner, pk = pk)
+
+#     form = LearnerAddForm(request.POST or None, instance = obj)
+
+#     # Check if the form is valid:
+#     if form.is_valid():
+
+#         # Commit the data and redirect to the 'my learners' page. 
+#         form.save()
+#         return HttpResponseRedirect('../mylearners')
+    
+#     # Add form dictionary to context
+#     context['form'] = form
+
+#     return TemplateResponse(request, "learner-update.html", context)
 
 class ThanksPageView(LoginRequiredMixin, TemplateView):
     template_name = "thanks.html"
