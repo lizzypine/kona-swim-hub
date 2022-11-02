@@ -3,15 +3,26 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
+
 <div class="container">
-  <h1>Welcome to Kona Swim Hub!</h1>
+  <div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to Kona Swim Hub!</h1>
+    <p class="lead">A place to find local swim lessons for your keiki.</p>
+    <hr class="my-4">
+    <p>For swim instructors: Sign up to create a course.</p>
+    <p>For 'ohanas: browse courses to find lessons that work for your keiki's schedule, age, and ability.</p>
+    <p class="lead">
+      <a href="{% url 'signup' %}" class="btn btn-primary mt-4 p-3">Create an Account</a>
+    </p>
+  </div>
+</div>
 
-  {% if user.is_authenticated %}
+{% if user.is_authenticated %}
 
-  {% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a> |
-  <a href="{% url 'signup' %}">Sign Up</a>
+{% else %}
+<p>You are not logged in</p>
+<a href=" {% url 'login' %}">Log In</a> |
+<a href="{% url 'signup' %}">Sign Up</a>
 </div>
 {% endif %}
 {% endblock content %}

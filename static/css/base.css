@@ -6,6 +6,6 @@
   padding-top: 1em;
 }
 
-hr:last-of-type {
+.enrolled-course-description:last-of-type {
   display: none;
 }

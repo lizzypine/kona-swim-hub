@@ -127,8 +127,14 @@ def learner_update(request, pk):
 # Learner delete 
 class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Learner
-    template_name = 'learner_confirm_delete.html'
+    template_name = 'learner-confirm-delete.html'
     success_url = '../../my-account'
+
+# Unenroll from Course
+class UnenrollFromCourseView(LoginRequiredMixin, DeleteView):
+    model = Course
+    template_name = 'learner-unenroll-from-course.html'
+    success_url = '../../my-account' # check this
 
 # class LearnerUpdateView(LoginRequiredMixin, UpdateView):
 #     model = Learner
