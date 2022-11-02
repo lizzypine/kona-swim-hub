@@ -14,18 +14,29 @@
 
         <thead>
           <tr>
-            <th> Name </th>
+            <th>Name </th>
+            <th>Enrolled in Courses </th>
+            <th>Options</th>
           </tr>
         </thead>
 
         <tbody>
+          {% for learner, courses in learner_courses.items %}
           <tr>
-            {% for learner in learners %}
-            <td><a href="{% url 'learner-detail' learner.pk %}"">{{ learner.first_name }} {{ learner.last_name}}</a></td>
+            <td>{{ learner }}</td>
+            <td>
+              {% for course in courses %}
+              <li>{{ course.course_title }} {{ course.course_instructor }}</li>
+              {% endfor %}
+            </td>
+            <td>
+              <a href=" {% url 'learner-update' learner.pk %}" class="btn btn-warning" role="button">Edit</a>
+              <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+            {% empty %}
+            <h3>You don't have any learners registered yet.</h3>
+            {% endfor %}
           </tr>
-          {% empty %}
-          <h3>You don't have any learners registered yet.</h3>
-          {% endfor %}
         </tbody>
       </table>
     </div>
@@ -33,53 +44,53 @@
 
   <div>
     <a href=" {% url 'learner-add' %}" class="btn btn-primary" role="button">Add a Learner</a>
-    </div>
-
-
-
-    <div style="margin-top: 3.5em;">
-      <h2>My Courses</h2>
-      <div class="row my-3">
-        <div class="course-table-container">
-          <table class="table table-bordered table-hover">
-
-            <thead>
-              <tr>
-                <th>Course Name</th>
-                <th>Roster</th>
-                <th>Options</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                {% for course, roster in rosters.items %}
-                <td>{{ course }} </td>
-                <td>
-                  {% for learner in roster %}
-                  <li>{{ learner.first_name }} {{ learner.last_name }}</li>
-                  {% endfor %}
-                </td>
-                <td>
-                  <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit</a>
-                  <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete</a>
-                </td>
-              </tr>
-
-              {% empty %}
-              <h3>You haven't created any courses yet.</h3>
-              {% endfor %}
-
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div>
-        <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
-      </div>
-    </div>
   </div>
 
 
-  {% endblock content %}
+
+  <div style="margin-top: 3.5em;">
+    <h2>My Courses</h2>
+    <div class="row my-3">
+      <div class="course-table-container">
+        <table class="table table-bordered table-hover">
+
+          <thead>
+            <tr>
+              <th>Course Name</th>
+              <th>Roster</th>
+              <th>Options</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              {% for course, roster in rosters.items %}
+              <td>{{ course }} </td>
+              <td>
+                {% for learner in roster %}
+                <li>{{ learner.first_name }} {{ learner.last_name }}</li>
+                {% endfor %}
+              </td>
+              <td>
+                <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit</a>
+                <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete</a>
+              </td>
+            </tr>
+
+            {% empty %}
+            <h3>You haven't created any courses yet.</h3>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}

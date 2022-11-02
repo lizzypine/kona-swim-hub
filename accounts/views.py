@@ -33,6 +33,15 @@ class UserChangeView(CreateView):
 def my_account_view (request):
 
     learners = Learner.objects.filter(associated_with_user=request.user)
+
+    # Create a dictionary where the key is the learner id and the value is the list of courses this learner is enrolled in.
+    learner_courses = dict.fromkeys(learners)
+
+    # Get the list of courses that each learner is enrolled in.
+    for learner in learners:
+        course_list = Course.objects.filter(learner_on_roster=learner).values('course_title', 'course_instructor')
+        learner_courses[learner] = course_list
+    
     courses = Course.objects.filter(course_instructor=request.user)
 
     # Create a dictionary where the key is the course id and the value is the list of names on the roster for that course.
@@ -43,9 +52,9 @@ def my_account_view (request):
         roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
         rosters[course] = roster
 
-
     context = {
         "learners": learners,
+        "learner_courses": learner_courses,
         "courses": courses,
         "rosters": rosters
     }
