@@ -1,13 +1,7 @@
-# Is get_user_model correct here?
-from django.contrib.auth import get_user_model
-
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import User
-from .models import Learner
-from .models import Course
-from .models import Waitlist
+from lessons.lessons.models import User
 
 class UserTests(TestCase):
     @classmethod
@@ -15,19 +9,6 @@ class UserTests(TestCase):
         cls.user = User.objects.create(
             email="test@gmail.com", password="secret", first_name="testuserfirst", last_name="testuserlast", is_instructor="false"
         )
-
-        # cls.user = User.objects.create(
-        #     title="A good title",
-        #     body="Nice body content",
-        #     author=cls.user,
-        # )
-
-    # def test_post_model(self):
-    #     self.assertEqual(self.post.title, "A good title")
-    #     self.assertEqual(self.post.body, "Nice body content")
-    #     self.assertEqual(self.post.author.username, "testuser")
-    #     self.assertEqual(str(self.post), "A good title")
-    #     self.assertEqual(self.post.get_absolute_url(), "/post/1/")
 
     def test_model_content(self):
         self.assertEqual(self.user.email, "test@email.com")

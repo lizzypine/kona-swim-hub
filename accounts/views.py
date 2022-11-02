@@ -129,33 +129,3 @@ class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Learner
     template_name = 'learner-confirm-delete.html'
     success_url = '../../my-account'
-
-# Unenroll from Course
-class UnenrollFromCourseView(LoginRequiredMixin, DeleteView):
-    model = Course
-    template_name = 'learner-unenroll-from-course.html'
-    success_url = '../../my-account' # check this
-
-# class LearnerUpdateView(LoginRequiredMixin, UpdateView):
-#     model = Learner
-#     template_name = 'learner-update.html'
-#     context_object_name = 'learner'
-#     # fields = ('first_name', 'last_name', 'birthday')
-#     fields = '__all__'
-#     exclude = ['associated_with_user']
-#     form_class: LearnerAddForm
-#     success_url = '../../accounts/mylearners'
-
-    # widgets = {
-    #   'birthday': DatePickerInput(),
-    # }
-
-# Create your views here.
-# class SignUpView(CreateView):
-#     form_class = UserCreationForm
-#     success_url = reverse_lazy("login")
-#     template_name = "registration/signup.html"
-
-# class UserPageView(ListView):
-#     template_name = "users.html"
-#     model = CustomUser # New
