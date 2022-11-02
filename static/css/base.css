@@ -5,3 +5,7 @@
 .course-table-container {
   padding-top: 1em;
 }
+
+hr:last-of-type {
+  display: none;
+}

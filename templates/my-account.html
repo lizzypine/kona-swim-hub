@@ -26,15 +26,26 @@
             <td>{{ learner }}</td>
             <td>
               {% for course in courses %}
-              <li>{{ course.course_title }} {{ course.course_instructor }}</li>
+              <h5> Course Title: {{ course.course_title }}</h5>
+              <h7>Course Instructor: {{ course.course_instructor_id__first_name }}</h7>
+              <br>
+              <h7> Location: {{ course.course_location }}</h7>
+              <br>
+              <h7> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</h7>
+              <br>
+              <p> Description: {{ course.course_description }} </p>
+
+              <h7> {{ course.course_start_date }} to {{ course.course_end_date }}</h7>
+              <h7> {{ course.course_start_time }} - {{ course.course_end_time }}</h7>
+              <hr class="enrolled-course-description">
               {% endfor %}
             </td>
             <td>
-              <a href=" {% url 'learner-update' learner.pk %}" class="btn btn-warning" role="button">Edit</a>
-              <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger">Delete</a>
+              <a href=" {% url 'learner-update' learner.pk %}" class="btn btn-warning" role="button">Edit Learner</a>
+              <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger">Delete Learner</a>
             </td>
             {% empty %}
-            <h3>You don't have any learners registered yet.</h3>
+            <h7>You don't have any learners registered yet.</h7>
             {% endfor %}
           </tr>
         </tbody>
@@ -67,18 +78,20 @@
               {% for course, roster in rosters.items %}
               <td>{{ course }} </td>
               <td>
-                {% for learner in roster %}
-                <li>{{ learner.first_name }} {{ learner.last_name }}</li>
-                {% endfor %}
+                <ul>
+                  {% for learner in roster %}
+                  <li>{{ learner.first_name }} {{ learner.last_name }}</li>
+                  {% endfor %}
+                </ul>
               </td>
               <td>
-                <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit</a>
-                <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete</a>
+                <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit Course</a>
+                <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete Course</a>
               </td>
             </tr>
 
             {% empty %}
-            <h3>You haven't created any courses yet.</h3>
+            <h7>You haven't created any courses yet.</h7>
             {% endfor %}
 
           </tbody>

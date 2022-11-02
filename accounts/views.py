@@ -39,8 +39,10 @@ def my_account_view (request):
 
     # Get the list of courses that each learner is enrolled in.
     for learner in learners:
-        course_list = Course.objects.filter(learner_on_roster=learner).values('course_title', 'course_instructor')
+        course_list = Course.objects.filter(learner_on_roster=learner).values('course_title', 'course_instructor_id__first_name', 'course_description', 
+        'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_start_time', 'course_end_time')
         learner_courses[learner] = course_list
+        
     
     courses = Course.objects.filter(course_instructor=request.user)
 
