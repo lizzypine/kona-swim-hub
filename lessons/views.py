@@ -117,7 +117,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
     form_class = CourseRegistrationForm
     model = Course
     template_name = 'course_registration.html'
-    success_url = '../../accounts/mylearners'
+    success_url = '../../accounts/my-account'
     
     # Override get_form_kwargs method to pass the request object to the form class. 
     # This is necessary to display only the learners that are associated with the given user.

@@ -45,22 +45,31 @@
 
             <thead>
               <tr>
-                <th> Course Name </th>
+                <th>Course Name</th>
+                <th>Roster</th>
+                <th>Options</th>
               </tr>
             </thead>
 
             <tbody>
               <tr>
-                {% for course in courses %}
+                {% for course, roster in rosters.items %}
+                <td>{{ course }} </td>
                 <td>
-                  <p>{{ course.course_title }} </p> <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning"
-                    role="button">Edit</a>
+                  {% for learner in roster %}
+                  <li>{{ learner.first_name }} {{ learner.last_name }}</li>
+                  {% endfor %}
+                </td>
+                <td>
+                  <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit</a>
                   <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete</a>
                 </td>
               </tr>
+
               {% empty %}
               <h3>You haven't created any courses yet.</h3>
               {% endfor %}
+
             </tbody>
           </table>
         </div>

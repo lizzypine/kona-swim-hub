@@ -14,7 +14,7 @@
   <form action="" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    <a href="{% url 'mylearners' %}" class="btn btn-outline-primary me-2">Back</a>
+    <a href="{% url 'my-account' %}" class="btn btn-outline-primary me-2">Back</a>
     <input type="submit" class="btn btn-success" value="Submit">
   </form>
 

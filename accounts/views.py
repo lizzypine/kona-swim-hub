@@ -35,9 +35,19 @@ def my_account_view (request):
     learners = Learner.objects.filter(associated_with_user=request.user)
     courses = Course.objects.filter(course_instructor=request.user)
 
+    # Create a dictionary where the key is the course id and the value is the list of names on the roster for that course.
+    rosters = dict.fromkeys(courses)
+
+    # Get the roster of learners for each course.
+    for course in courses:
+        roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
+        rosters[course] = roster
+
+
     context = {
         "learners": learners,
         "courses": courses,
+        "rosters": rosters
     }
 
     return render(request, "my-account.html", context)
@@ -47,11 +57,11 @@ class LearnerDetailView(LoginRequiredMixin, DetailView):
     model = Learner
     template_name = 'learner-detail.html'
     context_object_name = 'learner'
-    # queryset = Course.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Filters courses to where this learner is on the roster
+
+        # Filters courses to those that have this learner on the roster
         context['courselist'] = Course.objects.filter(learner_on_roster=self.kwargs['pk']).values('course_title')
         return context
 
@@ -74,7 +84,7 @@ def learner_add(request):
             # Commit the data and redirect to the 'my learners' page. 
             form.instance.save()
 
-            return HttpResponseRedirect('../mylearners')
+            return HttpResponseRedirect('../my-account')
             
     else:
         form = LearnerAddForm()
