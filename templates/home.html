@@ -5,17 +5,34 @@
 {% block content %}
 
 <div class="container p-5">
+
+  {% if user.is_authenticated %}
+
   <div class="jumbotron text-center">
-    <h1 class="display-4">Welcome to Kona Swim Hub!</h1>
+    <h1 class="display-4">Welcome back to Kona Swim Hub</h1>
     <p class="lead">A place to find local swim lessons for your keiki.</p>
     <hr class="my-4">
-    <p>For swim instructors: Sign up to create a course.</p>
-    <p>For 'ohanas: browse courses to find lessons that work for your keiki's schedule, age, and ability.</p>
-    <p class="lead">
-      <a href="{% url 'signup' %}" class="btn btn-primary mt-4 p-3">Create an Account</a>
-    </p>
+    <p>For swim instructors: Under your name, choose My Account to create and manage your lessons.</p>
+    <p>For 'ohanas: Under your namne, choose My Account to add your keiki. Browse <a href="{% url 'course_list' %}"
+        class="">courses</a> to find lessons.</p>
+
+    {% else %}
+    <div class="jumbotron text-center">
+      <h1 class="display-4">Welcome to Kona Swim Hub!</h1>
+      <p class="lead">A place to find local swim lessons for your keiki.</p>
+      <hr class="my-4">
+      <p>For swim instructors: Create and manage your lessons in one place.</p>
+      <p>For 'ohanas: Browse to find lessons that work for your keiki's schedule, age, and ability.</p>
+      <p class="lead">
+        <a href="{% url 'signup' %}" class="btn btn-primary mt-4 p-3">Create an Account</a>
+      </p>
+    </div>
+    {% endif %}
+
   </div>
 </div>
+
+
 
 
 {% endblock content %}
