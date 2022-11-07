@@ -23,15 +23,15 @@ ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'lessons.apps.LessonsConfig',
+    'accounts.apps.AccountsConfig',
+    'pages.apps.PagesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'lessons.apps.LessonsConfig',
-    'accounts.apps.AccountsConfig',
-    'pages.apps.PagesConfig',
     'bootstrap5',
     'bootstrap_datepicker_plus',
     'django.forms',
@@ -138,10 +138,12 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
+# DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
