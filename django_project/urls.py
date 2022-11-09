@@ -22,5 +22,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', include('pages.urls')),
     path('lessons/', include('lessons.urls')),
+    path('', include("sendemail.urls")),
 ]
 

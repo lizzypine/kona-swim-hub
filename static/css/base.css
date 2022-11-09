@@ -1,3 +1,8 @@
+/* .container {
+  position: relative;
+  min-height: 100vh;
+} */
+
 .courses {
   padding-top: 1em;
 }
@@ -9,3 +14,11 @@
 .enrolled-course-description:last-of-type {
   display: none;
 }
+
+/* .footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 1.5rem;
+  line-height: 60px;
+} */

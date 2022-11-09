@@ -46,13 +46,7 @@ class CourseCreationForm(ModelForm):
 
 form = CourseCreationForm
 
-class CourseRegistrationForm(forms.ModelForm):
-    # Check that the learner is not already registered for this course.
-    # def clean_learner_data(self):
-    #   data = self.cleaned_data['learner']
-
-    #   if data == 
-    #   return data
+class CourseRegistrationForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         # Grants access to the request object so that only learners of the current user are available as options.
@@ -61,16 +55,12 @@ class CourseRegistrationForm(forms.ModelForm):
         self.fields['learner'].queryset = Learner.objects.filter(
         associated_with_user=self.request.user)
 
-        # learner_choices = Learner.objects.filter(
-        # associated_with_user=self.request.user)
-
     class Meta:
         model = Course
         # fields = ['id', 'num_spots_available']
         fields = ['id', 'learner_on_roster']
         exclude = ['course_instructor', 'learner_on_roster', 'course_title', 'course_description', 'course_age_range_min', 'course_age_range_max',
             'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time']
-
 
     learner = forms.ModelChoiceField(
         label='Select a Learner',
@@ -79,20 +69,4 @@ class CourseRegistrationForm(forms.ModelForm):
         required=True,
     )
 
-  # def save(self, commit=True):
-  #       inst = super(CourseRegistrationForm, self).save(commit=False)
-  #       inst.author = self._user
-  #       if commit:
-  #           inst.save()
-  #           self.save_m2m()
-  #       return inst
-
-  # def send_email(self):
-  #   # send email using the self.cleaned_data dictionary
-  #   pass
-
 form = CourseRegistrationForm
-
-# Go to payment.
-
-# Thanks!

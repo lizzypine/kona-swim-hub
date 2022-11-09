@@ -50,12 +50,6 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
     template_name = 'course_detail.html'
     context_object_name = 'course'
 
-# class CourseUpdateView(LoginRequiredMixin, UpdateView):
-#     model = Course
-#     template_name = 'course-edit.html'
-#     context_object_name = 'course'
-#     fields = '__all__'
-
 @ login_required
 def course_update(request, pk):
 
@@ -82,11 +76,6 @@ class CourseDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'course-delete.html'
     success_url = '../accounts/my-account'
 
-# def course_delete(request, pk):
-
-#     context = {}
-
-#     obj = get_object_or_404(Course, pk = pk)
 
 # Update a learner page
 # @ login_required
@@ -128,6 +117,27 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
+
+
+        # Check that the learner is not already registered for this course.
+        # def clean_learner_data(self):
+        #   data = self.cleaned_data['learner']
+
+        #   if data == 
+        #   return data
+
+        # def save(self, commit=True):
+  #       inst = super(CourseRegistrationForm, self).save(commit=False)
+  #       inst.author = self._user
+  #       if commit:
+  #           inst.save()
+  #           self.save_m2m()
+  #       return inst
+
+  # def send_email(self):
+  #   # send email using the self.cleaned_data dictionary
+  #   pass
+
 
         # Update linking table by adding learner to this course's roster.
         learner=form.cleaned_data.get('learner')
