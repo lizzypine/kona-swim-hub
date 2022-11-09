@@ -15,10 +15,11 @@
   display: none;
 }
 
-/* .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 1.5rem;
-  line-height: 60px;
-} */
+.custom-link {
+  transition: .4s;
+}
+
+.custom-link:hover {
+  transition: .4s;
+  opacity: .5
+}
