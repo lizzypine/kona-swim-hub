@@ -15,7 +15,7 @@ from django.shortcuts import get_object_or_404
 def course_create(request):
 
     # If this is a POST request then process the Form data
-    if request.method == "POST":
+    if request.method == 'POST':
         
         # Create a form instance and populate it with data from the request (binding):
         form = CourseCreationForm(request.POST)
@@ -76,31 +76,8 @@ class CourseDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'course-delete.html'
     success_url = '../accounts/my-account'
 
-
-# Update a learner page
-# @ login_required
-# def learner_update(request, pk):
-
-#     context = {}
-
-#     obj = get_object_or_404(Learner, pk = pk)
-
-#     form = LearnerAddForm(request.POST or None, instance = obj)
-
-#     # Check if the form is valid:
-#     if form.is_valid():
-
-#         # Commit the data and redirect to the 'my learners' page. 
-#         form.save()
-#         return HttpResponseRedirect('../mylearners')
-    
-#     # Add form dictionary to context
-#     context['form'] = form
-
-#     return TemplateResponse(request, "learner-update.html", context)
-
 class ThanksPageView(LoginRequiredMixin, TemplateView):
-    template_name = "thanks.html"
+    template_name = 'thanks.html'
 
 class RegisterLearner(LoginRequiredMixin, UpdateView):
     form_class = CourseRegistrationForm

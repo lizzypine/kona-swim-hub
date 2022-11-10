@@ -1,0 +1,11 @@
+{% load i18n %}{% autoescape off %}
+You're receiving this email because you created an account at KonaSwimHub.com
+
+{% translate "Welcome to Kona Swim Hub! You successfully created an account. Login here:" %}
+{{ protocol }}://{{ domain }}{% url 'login' %}
+
+{% translate "Thanks for using Kona Swim Hub!" %}
+
+The {{ site_name }} team
+
+{% endautoescape %}

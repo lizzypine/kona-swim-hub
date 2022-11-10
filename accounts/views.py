@@ -1,32 +1,70 @@
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, DeleteView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView, TemplateView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.core.mail import EmailMessage
+
+def user_register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        email = request.POST['email']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+
+        if CustomUser.objects.filter(email=email).exists():
+            messages.info(request, 'An account with this email already exists.')
+        else:
+            user = CustomUser.objects.create_user(
+                username=email, email=email, first_name=first_name, last_name=last_name)
+            mydict = {'email': email}
+            user.save()
+            html_template = 'registration/register_success_email.html'
+            html_message = render_to_string(html_template, context=mydict)
+            subject = 'You created an account with Kona Swim Hub'
+            email_from = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [email]
+            message = EmailMessage(
+                subject, 
+                html_message, 
+                email_from, 
+                recipient_list)
+            message.content_subtype = 'html'
+            message.fail_silently = False
+            message.send()
+            return HttpResponseRedirect('../register_thanks')
+            # return HttpResponseRedirect('../../accounts/my-account')
+
+    
+    else:
+        form = CustomUserCreationForm() 
+    
+    return TemplateResponse(request, 'registration/register.html', {'form': form})
+
+class RegisterThanksPageView(TemplateView):
+    template_name = 'registration/register_thanks.html'
 
 class ProfileUpdateView(DetailView):
     model = Learner
     template_name = 'course_detail.html'
     context_object_name = 'course'
 
-class SignUpView(CreateView):
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy("login")
-    template_name = "registration/signup.html"
-
 class UserPageView(ListView):
-    template_name = "users.html"
-    model = CustomUser # New
+    template_name = 'users.html'
+    model = CustomUser
 
 class UserChangeView(CreateView):
     form_class = CustomUserChangeForm
-    success_url = reverse_lazy("profile")
-    template_name = "profile.html"
+    success_url = reverse_lazy('profile')
+    template_name = 'profile.html'
 
 # My Account Page
 @login_required
@@ -43,7 +81,6 @@ def my_account_view (request):
         'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_start_time', 'course_end_time')
         learner_courses[learner] = course_list
         
-    
     courses = Course.objects.filter(course_instructor=request.user)
 
     # Create a dictionary where the key is the course id and the value is the list of names on the roster for that course.
@@ -55,13 +92,13 @@ def my_account_view (request):
         rosters[course] = roster
 
     context = {
-        "learners": learners,
-        "learner_courses": learner_courses,
-        "courses": courses,
-        "rosters": rosters
+        'learners': learners,
+        'learner_courses': learner_courses,
+        'courses': courses,
+        'rosters': rosters
     }
 
-    return render(request, "my-account.html", context)
+    return render(request, 'my-account.html', context)
 
 # Learner detail page
 class LearnerDetailView(LoginRequiredMixin, DetailView):
@@ -81,7 +118,7 @@ class LearnerDetailView(LoginRequiredMixin, DetailView):
 def learner_add(request):
     
     # If this is a POST request then process the Form data
-    if request.method == "POST":
+    if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding data to the form):
         form = LearnerAddForm(request.POST)
@@ -100,7 +137,7 @@ def learner_add(request):
     else:
         form = LearnerAddForm()
 
-    return TemplateResponse(request, "learner-add.html", {'form': form})
+    return TemplateResponse(request, 'learner-add.html', {'form': form})
 
 # Update a learner page
 @ login_required
@@ -122,9 +159,9 @@ def learner_update(request, pk):
     # Add form dictionary to context
     context['form'] = form
 
-    return TemplateResponse(request, "learner-update.html", context)
+    return TemplateResponse(request, 'learner-update.html', context)
 
-# Learner delete 
+# Delete a learner
 class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Learner
     template_name = 'learner-confirm-delete.html'

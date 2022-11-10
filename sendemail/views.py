@@ -8,7 +8,7 @@ from sendemail.forms import ContactForm
 from django.views.generic import TemplateView
 
 def contactView(request):
-    if request.method == "GET":
+    if request.method == 'GET':
         form = ContactForm()
     else:
         form = ContactForm(request.POST)
@@ -20,10 +20,10 @@ def contactView(request):
                 send_mail(subject, message, settings.CONTACT_EMAIL, [settings.DEFAULT_FROM_EMAIL])
                 # send_mail(subject, message, 'lizzy@lehuaweb.com', [settings.DEFAULT_FROM_EMAIL])
             except BadHeaderError:
-                return HttpResponse("Invalid header found.")
+                return HttpResponse('Invalid header found.')
             # return HttpResponseRedirect('contact_thanks/')
             return redirect('contact_thanks/')
-    return render(request, "contact.html", {"form": form})
+    return render(request, 'contact.html', {'form': form})
 
 class ContactThanksPageView(TemplateView):
-    template_name = "contact_thanks.html"
+    template_name = 'contact_thanks.html'
