@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django import forms
 from lessons.models import Course
 from accounts.models import Learner
+from django.utils.safestring import mark_safe
 
 from django.utils.translation import gettext_lazy as _
 
@@ -57,13 +58,12 @@ class CourseRegistrationForm(ModelForm):
 
     class Meta:
         model = Course
-        # fields = ['id', 'num_spots_available']
         fields = ['id', 'learner_on_roster']
         exclude = ['course_instructor', 'learner_on_roster', 'course_title', 'course_description', 'course_age_range_min', 'course_age_range_max',
             'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time']
-
+    
     learner = forms.ModelChoiceField(
-        label='Select a Learner',
+        label=mark_safe('Select a Learner. Need to add one? Go to <a href="/../accounts/my-account" target="_blank">my account</a>.'),
         queryset=Learner.objects.order_by('first_name'),
         widget=forms.RadioSelect,
         required=True,

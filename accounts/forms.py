@@ -8,7 +8,6 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = CustomUser
         fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
-        exclude = ['username']
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:

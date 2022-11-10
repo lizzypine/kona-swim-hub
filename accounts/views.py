@@ -41,8 +41,6 @@ def user_register(request):
             message.fail_silently = False
             message.send()
             return HttpResponseRedirect('../register_thanks')
-            # return HttpResponseRedirect('../../accounts/my-account')
-
     
     else:
         form = CustomUserCreationForm() 

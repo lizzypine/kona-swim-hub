@@ -95,7 +95,6 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         instance = form.save(commit=False)
 
-
         # Check that the learner is not already registered for this course.
         # def clean_learner_data(self):
         #   data = self.cleaned_data['learner']
@@ -104,12 +103,12 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         #   return data
 
         # def save(self, commit=True):
-  #       inst = super(CourseRegistrationForm, self).save(commit=False)
-  #       inst.author = self._user
-  #       if commit:
-  #           inst.save()
-  #           self.save_m2m()
-  #       return inst
+    #       inst = super(CourseRegistrationForm, self).save(commit=False)
+    #       inst.author = self._user
+    #       if commit:
+    #           inst.save()
+    #           self.save_m2m()
+        #       return inst
 
   # def send_email(self):
   #   # send email using the self.cleaned_data dictionary
