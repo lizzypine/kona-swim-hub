@@ -1,7 +1,6 @@
-/* .container {
-  position: relative;
-  min-height: 100vh;
-} */
+.main {
+  padding-bottom: 120px;
+}
 
 .courses {
   padding-top: 1em;

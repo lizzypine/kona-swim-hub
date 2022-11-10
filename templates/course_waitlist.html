@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block title %}Register for a Course | Kona Swim Hub{% endblock title%}
+
+{% block content %}
+
+<div class="container">
+
+  <h1>Register for {{ course.course_title }} </h1>
+
+  <h2> Course Title: {{ course.course_title }} </h2>
+  <h3> Location: {{ course.course_location }} </h3>
+  <h3> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }} </h3>
+  <h3> Instructor: {{ course.course_instructor }} </h3>
+  <p> {{ course.course_description }} </p>
+
+  <h3> {{ course.course_start_date }} to {{ course.course_end_date }} </h3>
+  <h3> {{ course.course_start_time }} - {{ course.course_end_time }} </h3>
+
+  <h3> Number of spots available: {{ course.num_spots_available }} </h3>
+
+  <form action="" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <a href="{% url 'course_waitlist' course.pk %}" class="btn btn-outline-primary me-2">Back</a>
+    <input type="Submit" class="btn btn-info" value="Join waitlist">
+    {% endbuttons %}
+  </form>
+
+</div>
+
+{% endblock %}

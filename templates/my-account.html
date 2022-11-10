@@ -38,6 +38,8 @@
               <h7> {{ course.course_start_date }} to {{ course.course_end_date }}</h7>
               <h7> {{ course.course_start_time }} - {{ course.course_end_time }}</h7>
               <hr class="enrolled-course-description">
+              {% empty %}
+              <h7>Not registered for any courses.</h7>
               {% endfor %}
             </td>
             <td>

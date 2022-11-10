@@ -61,12 +61,24 @@ class CourseRegistrationForm(ModelForm):
         fields = ['id', 'learner_on_roster']
         exclude = ['course_instructor', 'learner_on_roster', 'course_title', 'course_description', 'course_age_range_min', 'course_age_range_max',
             'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time']
-    
+
     learner = forms.ModelChoiceField(
-        label=mark_safe('Select a Learner. Need to add one? Go to <a href="/../accounts/my-account" target="_blank">my account</a>.'),
+        label=mark_safe('Select a Learner to register. Need to add one? Go to <a href="/../accounts/my-account" target="_blank">my account</a>.'),
         queryset=Learner.objects.order_by('first_name'),
         widget=forms.RadioSelect,
         required=True,
     )
+
+    # def clean_learner(self, learner):
+    #     from django.core.exceptions import ValidationError
+
+    #     learner=form.cleaned_data.get('learner')
+    #     learner_on_roster=learner.id
+
+    #     if Course.objects.filter(learner_on_roster=learner_on_roster).exists():
+    #         raise ValidationError('This learner is already registered for this course.')
+
+    #     return learner
+
 
 form = CourseRegistrationForm

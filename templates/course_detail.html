@@ -21,12 +21,22 @@
 
     <h3> Number of spots available: {{ course.num_spots_available }} </h3>
 
-    <div class="text-start">
+    {% if course.num_spots_available <= 0 %} <div class="text-start">
       <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
-      <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-success"
-        role="button">Register</a>
+      <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-secondary disabled"
+        aria-disabled="true" role="button">Register</a>
+      <a href="#" type="submit" class="btn btn-info" role="button">Join waitlist</a>
+</div>
 
-    </div>
-  </body>
+{% else %}
+
+<div class="text-start">
+  <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
+  <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-success" role="button">Register</a>
+</div>
+
+{% endif %}
+
+</body>
 </div>
 {% endblock content %}

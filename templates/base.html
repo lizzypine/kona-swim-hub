@@ -27,7 +27,7 @@
 </head>
 
 
-<div class="container pb-4">
+<div class="container pb-6 main">
     {% if user.is_authenticated %}
 
 
@@ -81,20 +81,20 @@
 
     {% endblock content %}
 
+    <footer class="footer fixed-bottom bg-light text-muted">
+        <div class="row text-center p-2">
+            <ul class="m-2 list-inline">
+                <li class="list-inline-item">
+                    <h5><a href="{% url 'about' %}" class="text-reset text-decoration-none custom-link" </a>About</h5>
+                </li>
+                <li class="list-inline-item">
+                    <h5><a href="{% url 'contact' %}" class="text-reset text-decoration-none custom-link" </a>Contact
+                    </h5>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
 </div>
-
-
-<footer class="footer fixed-bottom bg-light text-muted">
-    <div class="row text-center p-2">
-        <ul class="m-2 list-inline">
-            <li class="list-inline-item">
-                <h5><a href="{% url 'about' %}" class="text-reset text-decoration-none custom-link" </a>About</h5>
-            </li>
-            <li class="list-inline-item">
-                <h5><a href="{% url 'contact' %}" class="text-reset text-decoration-none custom-link" </a>Contact</h5>
-            </li>
-        </ul>
-    </div>
-</footer>
 
 </html>
