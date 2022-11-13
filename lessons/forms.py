@@ -67,18 +67,24 @@ class CourseRegistrationForm(ModelForm):
         queryset=Learner.objects.order_by('first_name'),
         widget=forms.RadioSelect,
         required=True,
-    )
+        error_messages = {
+            'required':"Please Enter your Name"
+            }
+        )
+    
+    def clean_learner(self):
+        from django.core.exceptions import ValidationError
 
-    # def clean_learner(self, learner):
-    #     from django.core.exceptions import ValidationError
+        instance = form.save(self, commit=False)
+        learner = self.cleaned_data.get('learner')
 
-    #     learner=form.cleaned_data.get('learner')
-    #     learner_on_roster=learner.id
-
-    #     if Course.objects.filter(learner_on_roster=learner_on_roster).exists():
-    #         raise ValidationError('This learner is already registered for this course.')
-
-    #     return learner
-
+        # If the selected learner's name is already on the roster for this course, show an error message.
+        course = Course.objects.filter(id=instance.id)
+        roster = Learner.objects.filter(learners__in=course)
+        if learner in roster:
+            print("already here")
+            raise ValidationError('This learner is already registered for this course.')
+        
+        return learner
 
 form = CourseRegistrationForm

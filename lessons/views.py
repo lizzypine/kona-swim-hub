@@ -6,7 +6,6 @@ from lessons.models import Course
 from lessons.forms import CourseCreationForm, CourseRegistrationForm
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
-#from django.core.exceptions import ValidationError
 # from django.urls import reverse
 # from filters import AgeFilter
 
@@ -93,55 +92,12 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         kwargs['request'] = self.request
         return kwargs
 
+
     def form_valid(self, form):
-        instance = form.save(commit=False)
-
-        # Check that the learner is not already registered for this course.
-        
-        # def clean_learner_data(self):
-        #    data = self.cleaned_data['learner']
-
-        #   if course.learner_on_roster == data
-        #   return data
-
-        # def save(self, commit=True):
-    #       inst = super(CourseRegistrationForm, self).save(commit=False)
-    #       inst.author = self._user
-    #       if commit:
-    #           inst.save()
-    #           self.save_m2m()
-        #       return inst
-
-  # def send_email(self):
-  #   # send email using the self.cleaned_data dictionary
-  #   pass
-
+        instance = form.save(commit = False)
+        learner = form.cleaned_data.get('learner')
+        learner_on_roster = learner.id
         # Update linking table by adding learner to this course's roster.
-        learner=form.cleaned_data.get('learner')
-        learner_on_roster=learner.id
-
-        # Check that the learner is not already registered for this course.
-        #learner = Course.objects.filter(learners=learner)
-
-        # learner=form.cleaned_data.get('learner')
-        # learner_on_roster=learner.id
-
-        # if Course.objects.filter(learner_on_roster=learner).exists():
-        #     print('This learner is already registered for this course.')
-            # raise ValidationError('This learner is already registered for this course.')
-
-        # def clean_learner(self, learner):
-        #     from django.core.exceptions import ValidationError
-
-        #     learner=form.cleaned_data.get('learner')
-        #     learner_on_roster=learner.id
-
-        #     if Course.objects.filter(learner_on_roster=learner_on_roster).exists():
-        #         raise ValidationError('This learner is already registered for this course.')
-
-        #     return learner
-        # else: 
-
         instance.learner_on_roster.add(learner_on_roster)
 
         # Update the number of spots that will be available after this learner registers.
@@ -149,6 +105,11 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
 
         form.save_m2m()
         return super().form_valid(form)
+
+    # Email the user a confirmation
+    # def send_email(self):
+        # send email using the self.cleaned_data dictionary
+        # pass
 
 
 
@@ -200,5 +161,5 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
 #         # Update the number of spots that will be available after this learner registers.
 #         instance.num_spots_available = instance.num_spots_available - 1
 
-#         form.save_m2m()
-#         return super().form_valid(form)
+        # form.save_m2m()
+        # return super().form_valid(form)
