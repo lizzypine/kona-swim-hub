@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -6,12 +6,13 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, TemplateView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
-from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm
-from django.http import HttpResponseRedirect
+from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm, ContactForm
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template.response import TemplateResponse
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import EmailMessage
+from django.core.mail import send_mail, BadHeaderError
 
 def user_register(request):
     if request.method == 'POST':
@@ -164,3 +165,25 @@ class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Learner
     template_name = 'learner-confirm-delete.html'
     success_url = '../../my-account'
+
+# Contact - send a message to the site admin
+def contactView(request):
+    if request.method == 'GET':
+        form = ContactForm()
+    else:
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            from_email = form.cleaned_data['from_email']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(subject, message, settings.CONTACT_EMAIL, [settings.DEFAULT_FROM_EMAIL])
+                # send_mail(subject, message, 'lizzy@lehuaweb.com', [settings.DEFAULT_FROM_EMAIL])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            # return HttpResponseRedirect('contact_thanks/')
+            return redirect('contact_thanks/')
+    return render(request, 'contact.html', {'form': form})
+
+class ContactThanksPageView(TemplateView):
+    template_name = 'contact_thanks.html'

@@ -106,7 +106,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         form.save_m2m()
         return super().form_valid(form)
 
-    # Email the user a confirmation
+    # Email the user a confirmation of this registration.
     # def send_email(self):
         # send email using the self.cleaned_data dictionary
         # pass
