@@ -7,12 +7,9 @@ from lessons.forms import CourseCreationForm, CourseRegistrationForm
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
+# from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
-
-# from django.core.mail import EmailMessage
-
-
 # from django.urls import reverse
 # from filters import AgeFilter
 
@@ -111,13 +108,21 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         # Update the number of spots that will be available after this learner registers.
         instance.num_spots_available = instance.num_spots_available - 1
 
-        # Send a confirmation email
+        # Send a confirmation email to user
         subject = 'You signed up for swim lessons through Kona Swim Hub'
-        html_template = 'course_registration_success_email.html'
+        html_template = 'course_registration_success_email_family.html'
         html_message = render_to_string(html_template)
         email_from = settings.DEFAULT_FROM_EMAIL
-        # recipient_list = 'elizabethpine4@gmail.com'
-        send_mail(subject, html_message, email_from, ['elizabethpine4@gmail.com'], fail_silently=False)
+        recipient_list = [(self.request.user.email)]
+        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
+
+        # Send a confirmation email to instructor
+        html_template = 'course_registration_success_email_instructor.html'
+        html_message = render_to_string(html_template)
+        subject = 'A student signed up for your course through Kona Swim Hub'
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [(instance.course_instructor.email)]
+        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
         return super().form_valid(form)
 
