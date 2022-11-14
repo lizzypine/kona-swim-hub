@@ -90,22 +90,4 @@ class CourseRegistrationForm(ModelForm):
         
         return learner
 
-    # def save(self):
-    #     instance = super(CourseRegistrationForm, self).save()
-
-    #     @transaction.on_commit
-    #     def send_confirmation_email():
-    #         html_template = 'course_registration_success_email.html'
-    #         html_message = render_to_string(html_template)
-    #         subject = 'You signed up for swim lessons through Kona Swim Hub'
-    #         email_from = settings.DEFAULT_FROM_EMAIL
-    #         # Get the user's email
-    #         # recipient_list = self.request.email
-    #         recipient_list = 'elizabethpine4@gmail.com'
-    #         print(recipient_list)
-    #         # recipient_list = [email]
-    #         send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
-    #     return instance
-
-
 form = CourseRegistrationForm

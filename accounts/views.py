@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, TemplateView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
-from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm, ContactForm
+from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm, ContactForm, ContactInstructorForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.response import TemplateResponse
 from django.template.loader import render_to_string
@@ -69,17 +69,6 @@ class UserChangeView(CreateView):
 @login_required
 def my_account_view (request):
 
-    learners = Learner.objects.filter(associated_with_user=request.user)
-
-    # Create a dictionary where the key is the learner id and the value is the list of courses this learner is enrolled in.
-    learner_courses = dict.fromkeys(learners)
-
-    # Get the list of courses that each learner is enrolled in.
-    for learner in learners:
-        course_list = Course.objects.filter(learner_on_roster=learner).values('course_title', 'course_instructor_id__first_name', 'course_description', 
-        'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_start_time', 'course_end_time')
-        learner_courses[learner] = course_list
-        
     courses = Course.objects.filter(course_instructor=request.user)
 
     # Create a dictionary where the key is the course id and the value is the list of names on the roster for that course.
@@ -89,6 +78,18 @@ def my_account_view (request):
     for course in courses:
         roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
         rosters[course] = roster
+
+    learners = Learner.objects.filter(associated_with_user=request.user)
+
+    # Create a dictionary where the key is the learner id and the value is the list of courses this learner is enrolled in.
+    learner_courses = dict.fromkeys(learners)
+
+    # Get the list of courses that each learner is enrolled in.
+    for learner in learners:
+        course_list = Course.objects.filter(learner_on_roster=learner).values('course_title', 'course_instructor_id__first_name', 'course_instructor_id__last_name', 'course_instructor_id__pk', 'course_instructor_id__email', 'course_description', 
+        'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_start_time', 'course_end_time')
+        
+        learner_courses[learner] = course_list
 
     context = {
         'learners': learners,
@@ -184,3 +185,26 @@ def contactView(request):
 
 class ContactThanksPageView(TemplateView):
     template_name = 'contact_thanks.html'
+
+# Contact - send a message to the site admin
+def contact_instructor(request, pk):
+
+    instructor = CustomUser.objects.get(id=pk)
+    recipient_list = instructor.email
+
+    if request.method == 'GET':
+        form = ContactInstructorForm()
+    else:
+        form = ContactInstructorForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [(recipient_list)], fail_silently=False)
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect('contact_instructor_thanks')
+    return render(request, 'contact_instructor.html', {'form': form, 'instructor': instructor})
+
+class ContactInstructorThanks(TemplateView):
+    template_name = 'contact_instructor_thanks.html'

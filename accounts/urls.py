@@ -1,5 +1,5 @@
 from django.urls import path
-from accounts.views import UserPageView, LearnerDetailView, LearnerDeleteView, RegisterThanksPageView, contactView, ContactThanksPageView
+from accounts.views import UserPageView, LearnerDetailView, LearnerDeleteView, RegisterThanksPageView, contactView, ContactThanksPageView, ContactInstructorThanks
 from accounts import views
 
 urlpatterns = [
@@ -12,15 +12,7 @@ urlpatterns = [
     path('<pk>/delete/', LearnerDeleteView.as_view(), name='learner-delete'),
     path("my-account/", views.my_account_view, name="my-account"),
     path("contact/", contactView, name="contact"),
-    path('contact/contact_thanks/', ContactThanksPageView.as_view(), name='contact_thanks')
+    path('contact/contact_thanks/', ContactThanksPageView.as_view(), name='contact_thanks'),
+    path('contact_instructor/<pk>', views.contact_instructor, name='contact_instructor'),
+    path('thanks/', ContactInstructorThanks.as_view(), name='contact_instructor_thanks')
 ]
-
-
-# from django.urls import path
-
-# from sendemail.views import contactView, ContactThanksPageView
-
-# urlpatterns = [
-#     path("contact/", contactView, name="contact"),
-#     path('contact/contact_thanks/', ContactThanksPageView.as_view(), name='contact_thanks')
-# ]

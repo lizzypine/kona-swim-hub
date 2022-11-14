@@ -7,61 +7,7 @@
 <div class="container">
   <h1>Hi, {{ user.first_name }} {{ user.last_name }}!</h1>
 
-  <h2>My Learners</h2>
-  <div class="row my-3">
-    <div class="course-table-container">
-      <table class="table table-bordered table-hover">
-
-        <thead>
-          <tr>
-            <th>Name </th>
-            <th>Enrolled in Courses </th>
-            <th>Options</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for learner, courses in learner_courses.items %}
-          <tr>
-            <td>{{ learner }}</td>
-            <td>
-              {% for course in courses %}
-              <h5> Course Title: {{ course.course_title }}</h5>
-              <h7>Course Instructor: {{ course.course_instructor_id__first_name }}</h7>
-              <br>
-              <h7> Location: {{ course.course_location }}</h7>
-              <br>
-              <h7> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</h7>
-              <br>
-              <p> Description: {{ course.course_description }} </p>
-
-              <h7> {{ course.course_start_date }} to {{ course.course_end_date }}</h7>
-              <h7> {{ course.course_start_time }} - {{ course.course_end_time }}</h7>
-              <hr class="enrolled-course-description">
-              {% empty %}
-              <h7>Not registered for any courses.</h7>
-              {% endfor %}
-            </td>
-            <td>
-              <a href=" {% url 'learner-update' learner.pk %}" class="btn btn-warning" role="button">Edit Learner</a>
-              <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger">Delete Learner</a>
-            </td>
-            {% empty %}
-            <h7>You don't have any learners registered yet.</h7>
-            {% endfor %}
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div>
-    <a href=" {% url 'learner-add' %}" class="btn btn-primary" role="button">Add a Learner</a>
-  </div>
-
-
-
-  <div style="margin-top: 3.5em;">
+  <div style="margin-top: 1.5em;">
     <h2>My Courses</h2>
     <div class="row my-3">
       <div class="course-table-container">
@@ -86,9 +32,12 @@
                   {% endfor %}
                 </ul>
               </td>
-              <td>
+              <td class="options">
                 <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit Course</a>
-                <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete Course</a>
+                <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete
+                  Course</a>
+                <a href="{% url 'course-edit' course.pk %}" class="btn btn-info">Send a
+                  message</a>
               </td>
             </tr>
 
@@ -105,7 +54,66 @@
       <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
     </div>
   </div>
-</div>
 
+
+  <div style="margin-top: 3.5em;">
+    <h2>My Learners</h2>
+    <div class="row my-3">
+      <div class="course-table-container">
+        <table class="table table-bordered table-hover">
+
+          <thead>
+            <tr>
+              <th>Name </th>
+              <th>Enrolled in Courses </th>
+              <th>Options</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for learner, courses in learner_courses.items %}
+            <tr>
+              <td>{{ learner }}</td>
+              <td>
+                {% for course in courses %}
+                <h5> Course Title: {{ course.course_title }}</h5>
+                <h7>Course Instructor: {{ course.course_instructor_id__first_name }}
+                  {{course.course_instructor_id__last_name }}</h7>
+                <br>
+                <h7> Location: {{ course.course_location }}</h7>
+                <br>
+                <h7> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</h7>
+                <br>
+                <p> Description: {{ course.course_description }} </p>
+
+                <h7> {{ course.course_start_date }} to {{ course.course_end_date }}</h7>
+                <h7> {{ course.course_start_time }} - {{ course.course_end_time }}</h7>
+                <div><a href="{% url 'contact_instructor' course.course_instructor_id__pk %}" class="btn btn-info mt-2"
+                    role="button">Contact
+                    Instructor</a>
+                </div>
+                <hr class="enrolled-course-description">
+                {% empty %}
+                <h7>Not registered for any courses.</h7>
+                {% endfor %}
+              </td>
+              <td>
+                <a href="{% url 'learner-update' learner.pk %}" class="btn btn-warning" role="button">Edit Learner</a>
+                <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger">Delete Learner</a>
+              </td>
+              {% empty %}
+              <h7>You don't have any learners registered yet.</h7>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <a href=" {% url 'learner-add' %}" class="btn btn-primary" role="button">Add a Learner</a>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}
