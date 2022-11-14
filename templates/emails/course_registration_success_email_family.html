@@ -1,0 +1,15 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktranslate %}Aloha, {{ user }}! {% endblocktranslate %}
+
+{% blocktranslate %}You successfully registered {{ learner }} for {{ course }} on Kona Swim Hub.{% endblocktranslate %}
+
+{% translate "You can view your learner's courses here:" %}
+
+{% block link %}
+{{ "http://127.0.0.1:8000/accounts/my-account" }}
+{% endblock %}
+
+{% translate "Thanks for using Kona Swim Hub!" %}
+
+{% endautoescape %}
