@@ -178,10 +178,8 @@ def contactView(request):
             message = form.cleaned_data['message']
             try:
                 send_mail(subject, message, settings.CONTACT_EMAIL, [settings.DEFAULT_FROM_EMAIL])
-                # send_mail(subject, message, 'lizzy@lehuaweb.com', [settings.DEFAULT_FROM_EMAIL])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
-            # return HttpResponseRedirect('contact_thanks/')
             return redirect('contact_thanks/')
     return render(request, 'contact.html', {'form': form})
 

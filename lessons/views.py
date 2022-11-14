@@ -6,6 +6,13 @@ from lessons.models import Course
 from lessons.forms import CourseCreationForm, CourseRegistrationForm
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+
+# from django.core.mail import EmailMessage
+
+
 # from django.urls import reverse
 # from filters import AgeFilter
 
@@ -54,9 +61,7 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
 def course_update(request, pk):
 
     context = {}
-
     obj = get_object_or_404(Course, pk = pk)
-
     form = CourseCreationForm(request.POST or None, instance = obj)
 
     # Check if the form is valid:
@@ -92,9 +97,12 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         kwargs['request'] = self.request
         return kwargs
 
-
     def form_valid(self, form):
         instance = form.save(commit = False)
+
+        # Save the many-to-many relationship 
+        form.save_m2m()
+
         learner = form.cleaned_data.get('learner')
         learner_on_roster = learner.id
         # Update linking table by adding learner to this course's roster.
@@ -103,17 +111,15 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         # Update the number of spots that will be available after this learner registers.
         instance.num_spots_available = instance.num_spots_available - 1
 
-        form.save_m2m()
+        # Send a confirmation email
+        subject = 'You signed up for swim lessons through Kona Swim Hub'
+        html_template = 'course_registration_success_email.html'
+        html_message = render_to_string(html_template)
+        email_from = settings.DEFAULT_FROM_EMAIL
+        # recipient_list = 'elizabethpine4@gmail.com'
+        send_mail(subject, html_message, email_from, ['elizabethpine4@gmail.com'], fail_silently=False)
+
         return super().form_valid(form)
-
-    # Email the user a confirmation of this registration.
-    # def send_email(self):
-        # send email using the self.cleaned_data dictionary
-        # pass
-
-
-
-
 
 ######CONSTRUCTION ZONE###########
 

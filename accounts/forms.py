@@ -24,10 +24,6 @@ class LearnerAddForm(ModelForm):
         'birthday': DatePickerInput()
         }
 
-    def send_email(self):
-        # send email using the self.cleaned_data dictionary
-        pass
-
 class ContactForm(forms.Form):
     from_email = forms.EmailField(max_length=50, required=True)
     subject = forms.CharField(max_length=100, required=True)
