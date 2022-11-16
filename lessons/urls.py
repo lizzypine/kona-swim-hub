@@ -13,6 +13,4 @@ urlpatterns = [
     path('course_registration/<pk>', RegisterLearner.as_view(), name='course_registration'),
     # path('profile/', LearnerListView.as_view(), name='learner_create')
     # path('profile/', LearnerListView.as_view(), name='profile')
-    # experiment
-    # path(', index)
 ]

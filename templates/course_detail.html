@@ -15,6 +15,7 @@
     <h3> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }} </h3>
     <h3> Instructor: {{ course.course_instructor }} </h3>
     <p> {{ course.course_description }} </p>
+    <p> Course Fee: ${{ course.course_price }}</p>
 
     <h3> {{ course.course_start_date }} to {{ course.course_end_date }} </h3>
     <h3> {{ course.course_start_time }} - {{ course.course_end_time }} </h3>
@@ -23,16 +24,17 @@
 
     {% if course.num_spots_available <= 0 %} <div class="text-start">
       <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
-      <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-secondary disabled"
+      <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-secondary disabled me-2"
         aria-disabled="true" role="button">Register</a>
-      <a href="#" type="submit" class="btn btn-info" role="button">Join waitlist</a>
+      <a href="#" type="submit" class="btn btn-info " role="button">Join waitlist</a>
 </div>
 
 {% else %}
 
 <div class="text-start">
-  <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
-  <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-success" role="button">Register</a>
+  <a href="{% url 'course_list' %}" class="btn btn-outline-primary">Back</a>
+  <a href=" {% url 'course_registration' course.pk %}" type="submit" class="btn btn-success me-2"
+    role="button">Register</a>
 </div>
 
 {% endif %}

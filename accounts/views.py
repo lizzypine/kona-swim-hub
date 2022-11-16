@@ -2,11 +2,10 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, DeleteView, TemplateView
+from django.views.generic import DetailView, DeleteView, TemplateView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
-from accounts.forms import CustomUserCreationForm, CustomUserChangeForm, LearnerAddForm, ContactForm, ContactInstructorForm
+from accounts.forms import CustomUserCreationForm, LearnerAddForm, ContactForm, ContactInstructorForm, ContactLearnersForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.response import TemplateResponse
 from django.template.loader import render_to_string
@@ -51,19 +50,19 @@ def user_register(request):
 class RegisterThanksPageView(TemplateView):
     template_name = 'registration/register_thanks.html'
 
-class ProfileUpdateView(DetailView):
+class ProfileUpdateView(LoginRequiredMixin, DetailView):
     model = Learner
     template_name = 'course_detail.html'
     context_object_name = 'course'
 
-class UserPageView(ListView):
-    template_name = 'users.html'
-    model = CustomUser
+# class UserPageView(LoginRequiredMixin, ListView):
+#     template_name = 'users.html'
+#     model = CustomUser
 
-class UserChangeView(CreateView):
-    form_class = CustomUserChangeForm
-    success_url = reverse_lazy('profile')
-    template_name = 'profile.html'
+# class UserChangeView(LoginRequiredMixin, CreateView):
+#     form_class = CustomUserChangeForm
+#     success_url = reverse_lazy('profile')
+#     template_name = 'profile.html'
 
 # My Account Page
 @login_required
@@ -183,10 +182,10 @@ def contactView(request):
             return redirect('contact_thanks/')
     return render(request, 'contact.html', {'form': form})
 
-class ContactThanksPageView(TemplateView):
+class ContactThanksPageView(LoginRequiredMixin, TemplateView):
     template_name = 'contact_thanks.html'
 
-# Contact - send a message to the site admin
+# Contact - send a message to the course instructor
 def contact_instructor(request, pk):
 
     instructor = CustomUser.objects.get(id=pk)
@@ -206,5 +205,29 @@ def contact_instructor(request, pk):
             return redirect('contact_instructor_thanks')
     return render(request, 'contact_instructor.html', {'form': form, 'instructor': instructor})
 
-class ContactInstructorThanks(TemplateView):
+class ContactInstructorThanks(LoginRequiredMixin, TemplateView):
     template_name = 'contact_instructor_thanks.html'
+
+# Contact - instructors can send a message to a learner or the entire roster for a course.
+def contact_learners(request, pk):
+
+    course = Course.objects.get(id=pk)
+    roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
+
+    if request.method == 'POST':
+        kwargs = {'roster': roster, 'course': course}
+        form = ContactLearnersForm(request.POST, **kwargs)
+
+        if form.is_valid():
+        #     subject = form.cleaned_data['subject']
+        #     message = form.cleaned_data['message']
+        #     try:
+        #         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [(recipient_list)], fail_silently=False)
+        #     except BadHeaderError:
+        #         return HttpResponse('Invalid header found.')
+            return redirect('contact_instructor_thanks')
+    else:
+        kwargs = {'roster': roster, 'course': course}
+        form = ContactLearnersForm(request.POST, **kwargs)
+
+    return render(request, 'contact_learners.html', {'form': form, 'course': course})

@@ -18,7 +18,7 @@ class Course(models.Model):
     course_start_time = models.TimeField(help_text="Enter the start time for this course in Hawaii Standard Time (e.g., 01:00 PM).")
     course_end_time = models.TimeField(help_text="Enter the end time for this course in Hawaii Standard Time(e.g., 02:00 PM).")
     num_spots_available = models.IntegerField()
-    course_price = models.DecimalField(max_digits=10, decimal_places=2)
+    course_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Enter price in US dollars.")
     learner_on_roster = models.ManyToManyField(to=Learner, related_name="learners", blank=True)
     def __str__(self):
         return self.course_title[:50]

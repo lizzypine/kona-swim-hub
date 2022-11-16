@@ -13,7 +13,6 @@ from django.utils.translation import gettext_lazy as _
 TIME_FORMAT = '%I:%M %p'
 
 class CourseCreationForm(ModelForm):
-
     course_start_time = forms.TimeField(input_formats=[TIME_FORMAT],
         widget=TimePickerInput(format=TIME_FORMAT)
     )
@@ -51,7 +50,6 @@ class CourseCreationForm(ModelForm):
 form = CourseCreationForm
 
 class CourseRegistrationForm(ModelForm):
-
     def __init__(self, *args, **kwargs):
         # Grants access to the request object so that only learners of the current user are available as options.
         self.request = kwargs.pop('request')
