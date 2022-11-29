@@ -1,9 +1,12 @@
 {% load i18n %}{% autoescape off %}
 
+{% blocktranslate %}Aloha, {{ user }}! {% endblocktranslate %}
 
-{% blocktranslate %} {{ message_content }} {% endblocktranslate %}
+{% blocktranslate %}{{ instructor }} sent you a message about {{ course }}: {% endblocktranslate %}
 
-{% translate "You can reply to this message here:" %}
+{% blocktranslate %}{{ message_content }} {% endblocktranslate %}
+
+{% translate "You can send a message here:" %}
 
 {% block link %}
 {{ "http://127.0.0.1:8000/accounts/my-account" }}

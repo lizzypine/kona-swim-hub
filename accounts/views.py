@@ -185,7 +185,7 @@ def contactView(request):
 class ContactThanksPageView(LoginRequiredMixin, TemplateView):
     template_name = 'contact_thanks.html'
 
-# Contact - send a message to the course instructor
+# Contact - parents/learners can send a message to the course instructor
 def contact_instructor(request, pk):
 
     instructor = CustomUser.objects.get(id=pk)
@@ -198,8 +198,10 @@ def contact_instructor(request, pk):
         if form.is_valid():
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
+            html_template = 'emails/message_user_to_instructor.html'
+            html_message = render_to_string(html_template, {"instructor": instructor.first_name, "user": request.user.first_name, "message_content": message})
             try:
-                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [(recipient_list)], fail_silently=False)
+                send_mail(subject, html_message, settings.DEFAULT_FROM_EMAIL, [(recipient_list)], fail_silently=False)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return redirect('contact_instructor_thanks')
@@ -212,22 +214,45 @@ class ContactInstructorThanks(LoginRequiredMixin, TemplateView):
 def contact_learners(request, pk):
 
     course = Course.objects.get(id=pk)
-    roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
 
     if request.method == 'POST':
-        kwargs = {'roster': roster, 'course': course}
+        kwargs = {'course': course}
         form = ContactLearnersForm(request.POST, **kwargs)
 
         if form.is_valid():
-        #     subject = form.cleaned_data['subject']
-        #     message = form.cleaned_data['message']
-        #     try:
-        #         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [(recipient_list)], fail_silently=False)
-        #     except BadHeaderError:
-        #         return HttpResponse('Invalid header found.')
+            # For each learner object, get the associated_with_user, then get the email of the parent user.
+            recipient_list = form.cleaned_data['recipient_list']
+            recipient_list_as_list = (list(recipient_list.all()))
+
+            # Add each parent's email address to list of bcc email recipients
+            bcc_recipient_list = []
+            for learner in recipient_list_as_list:
+                parent = learner.associated_with_user
+                parent_name = CustomUser.objects.get(id=parent.id).first_name
+                parent_email = CustomUser.objects.get(id=parent.id).email
+                bcc_recipient_list.append(parent_email)
+            
+            html_template = 'emails/message_instructor_to_learners.html'
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            html_message = render_to_string(html_template, {"user": parent_name, "instructor": course.course_instructor, "course": course.course_title, "message_content": message})
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email = [settings.DEFAULT_FROM_EMAIL]
+            message = EmailMessage(
+                subject, 
+                html_message, 
+                from_email, 
+                to_email,
+                bcc_recipient_list)
+            message.fail_silently = False
+            try:
+                message.send()
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
             return redirect('contact_instructor_thanks')
+    
     else:
-        kwargs = {'roster': roster, 'course': course}
+        kwargs = {'course': course}
         form = ContactLearnersForm(request.POST, **kwargs)
 
     return render(request, 'contact_learners.html', {'form': form, 'course': course})

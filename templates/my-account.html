@@ -89,8 +89,7 @@
                 <h7> {{ course.course_start_date }} to {{ course.course_end_date }}</h7>
                 <h7> {{ course.course_start_time }} - {{ course.course_end_time }}</h7>
                 <div><a href="{% url 'contact_instructor' course.course_instructor_id__pk %}" class="btn btn-info mt-2"
-                    role="button">Contact
-                    Instructor</a>
+                    role="button">Contact Instructor</a>
                 </div>
                 <hr class="enrolled-course-description">
                 {% empty %}

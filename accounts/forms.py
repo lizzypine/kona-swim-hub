@@ -37,13 +37,15 @@ class ContactLearnersForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         course = kwargs.pop('course')
-        roster = kwargs.pop('roster')
+        # roster = kwargs.pop('roster')
         super(ContactLearnersForm, self).__init__(*args, **kwargs)
-        self.fields['roster'].queryset = Learner.objects.filter(learners=course)
+        self.fields['recipient_list'].queryset = Learner.objects.filter(learners=course)
+        # self.fields['recipient_list'].queryset = Learner.objects.all()
 
-    roster = forms.ModelMultipleChoiceField(
+    recipient_list = forms.ModelMultipleChoiceField(
         label=('Who would you like to get this message?'),
-        queryset=Learner.objects.all(),
+        # queryset=Learner.objects.filter(learners=course),
+        queryset=None,
         widget=forms.CheckboxSelectMultiple,
         required=True,
         error_messages = {
@@ -51,6 +53,5 @@ class ContactLearnersForm(forms.Form):
             }
         )
 
-    # recipient_list = ()
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(widget = forms.Textarea, max_length=2000, required=True)

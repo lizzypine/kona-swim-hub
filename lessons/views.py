@@ -91,7 +91,6 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
     success_url = '../../accounts/my-account'
     
     # Override get_form_kwargs method to pass the request object to the form class. 
-    # This is necessary to display only the learners that are associated with the given user.
     def get_form_kwargs(self):
         kwargs = super(RegisterLearner, self).get_form_kwargs()
         kwargs['request'] = self.request
@@ -100,7 +99,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         instance = form.save(commit = False)
 
-        # Save the many-to-many relationship 
+        # Save the many-to-many relationship.
         form.save_m2m()
 
         learner = form.cleaned_data.get('learner')
@@ -115,7 +114,6 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         user = self.request.user.first_name
         course_title = instance.course_title
         instructor = instance.course_instructor
-
         subject = 'You signed up for swim lessons through Kona Swim Hub'
         html_template = 'emails/course_registration_success_email_family.html'
         html_message = render_to_string(html_template, {"user": user, "learner": learner, "course": course_title})
