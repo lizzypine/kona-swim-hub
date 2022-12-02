@@ -33,10 +33,11 @@
           <tr>
             <td><a href="{% url 'course_detail' course.pk %}">{{ course.course_title }}</a></td>
             <td> {{ course.course_location }} </td>
-            <td> {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</td>
+            <td> {{ course.course_age_range_min }} to {{ course.course_age_range_max }}
+            </td>
             <td> {{ course.course_instructor }} </td>
             <td> {{ course.course_description }} </td>
-            <td> ${{ course.course_price }} </td>
+            <td> $ {{ course.course_price }} </td>
           </tr>
           {% empty %}
           <h3>Create the first course!</h3>

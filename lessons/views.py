@@ -32,6 +32,7 @@ def course_create(request):
             # Hold the instance and attach the instructor to this course. 
             form.instance = form.save(commit=False)
             form.instance.course_instructor = request.user
+
             # Commit the data and redirect to the 'thanks' page. 
             form.instance.save()
             return HttpResponseRedirect('thanks/')
@@ -48,8 +49,6 @@ class CourseListView(LoginRequiredMixin, ListView):
 
     def get_course_list(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # age_filter = AgeFilter(request.GET)
-        # return render(request, 'course_list.html', {'age_filter':age_filter})
         return context
 
 class CourseDetailView(LoginRequiredMixin, DetailView):

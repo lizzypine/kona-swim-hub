@@ -9,8 +9,8 @@ class Course(models.Model):
     course_instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True) # Check this: When User is deleted, also delete the Course. 
     course_title = models.CharField(max_length=100, default=None)
     course_description = models.CharField(max_length=250)
-    course_age_range_min = models.IntegerField(null=True)
-    course_age_range_max = models.IntegerField(null=True)
+    course_age_range_min = models.CharField(max_length=50, null=True)
+    course_age_range_max = models.CharField(max_length=50, null=True)
     course_location = models.CharField(max_length=100) 
     course_start_date = models.DateField(help_text="Enter the date this course will begin.")
     course_end_date = models.DateField(help_text="Enter the date this course will end.")

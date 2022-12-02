@@ -5,12 +5,37 @@ from lessons.models import Course
 from accounts.models import Learner
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+from widgets import RangeInput
 # from django.conf import settings
 # from django.core.mail import send_mail
 # from django.template.loader import render_to_string
 # from django.db import transaction
 
 TIME_FORMAT = '%I:%M %p'
+
+AGE_CHOICES =[
+    ('6 months old', '6 months old'),
+    ('9 months old', '9 months old'),
+    ('12 months old', '12 months old'),
+    ('18 months old', '18 months old'),
+    ('2 years old', '2 years old'),
+    ('3 years old', '3 years old'),
+    ('4 years old', '4 years old'),
+    ('5 years old', '5 years old'),
+    ('6 years old', '6 years old'),
+    ('7 years old', '7 years old'),
+    ('8 years old', '8 years old'),
+    ('9 years old', '9 years old'),
+    ('10 years old', '10 years old'),
+    ('11 years old', '11 years old'),
+    ('12 years old', '12 years old'),
+    ('13 years old', '13 years old'),
+    ('14 years old', '14 years old'),
+    ('15 years old', '15 years old'),
+    ('16 years old', '16 years old'),
+    ('17 years old', '17 years old'),
+    ('18 years old', '18 years old'),
+]
 
 class CourseCreationForm(ModelForm):
     course_start_time = forms.TimeField(input_formats=[TIME_FORMAT],
@@ -20,6 +45,14 @@ class CourseCreationForm(ModelForm):
     course_end_time = forms.TimeField(input_formats=[TIME_FORMAT],
         widget=TimePickerInput(format=TIME_FORMAT)
     )
+
+    course_age_range_min = forms.CharField(
+        widget=forms.Select(choices=AGE_CHOICES),
+        )
+    
+    course_age_range_max = forms.CharField(
+        widget=forms.Select(choices=AGE_CHOICES),
+        )
 
     class Meta:
         model = Course
@@ -38,7 +71,10 @@ class CourseCreationForm(ModelForm):
         widgets = {
         'course_start_date': DatePickerInput(),
         'course_end_date': DatePickerInput(),
-        }
+        #'course_age_range_min': RangeInput(attrs={'id': 'minAgeInput', 'min': 0, 'max': 18, 'size': 40, 'class': 'form-control-range'}),
+        #'course_age_range_max': RangeInput(attrs={'id': 'maxAgeInput', 'min': 0, 'max': 18, 'size': 40, 'class': 'form-control-range'}),
+        'course_description': forms.Textarea(attrs={'rows': 3})
+        } 
 
     # def clean_time(self):
     #     course_start_time = self.cleaned_data['course_start_time']
@@ -78,7 +114,6 @@ class CourseRegistrationForm(ModelForm):
 
         instance = form.save(self, commit=False)
         learner = self.cleaned_data.get('learner')
-
         # If the selected learner's name is already on the roster for this course, show an error message.
         course = Course.objects.filter(id=instance.id)
         roster = Learner.objects.filter(learners__in=course)

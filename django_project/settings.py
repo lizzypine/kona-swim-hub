@@ -130,7 +130,6 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 CONTACT_EMAIL = env('CONTACT_EMAIL')
