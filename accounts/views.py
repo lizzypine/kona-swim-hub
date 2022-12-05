@@ -86,7 +86,7 @@ def my_account_view (request):
     # Get the list of courses that each learner is enrolled in.
     for learner in learners:
         course_list = Course.objects.filter(learner_on_roster=learner).values('course_title', 'course_instructor_id__first_name', 'course_instructor_id__last_name', 'course_instructor_id__pk', 'course_instructor_id__email', 'course_description', 
-        'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_start_time', 'course_end_time')
+        'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time')
         
         learner_courses[learner] = course_list
 
@@ -165,6 +165,11 @@ class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Learner
     template_name = 'learner-confirm-delete.html'
     success_url = '../../my-account'
+
+    # After the learner is deleted, if a spot becomes available in a course, email the instructor
+    # to invite a learner from the waitlist.
+    
+    # Otherwise, increase the number of spots available in the roster.
 
 # Contact - send a message to the site admin
 def contactView(request):

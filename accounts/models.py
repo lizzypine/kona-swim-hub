@@ -23,8 +23,6 @@ class Learner(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-
     bio = models.TextField()
-
     def __str__(self):
         return self.customuser.email

@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load bootstrap5 %}
 
-{% block title %}Register for a Course | Kona Swim Hub{% endblock title%}
+{% block title %}Join the waitlist | Kona Swim Hub{% endblock title%}
 
 {% block content %}
 
 <div class="container">
 
-  <h1>Register for {{ course.course_title }} </h1>
+  <h1>Join the waitlist for {{ course.course_title }} </h1>
 
   <h2> Course Title: {{ course.course_title }} </h2>
   <h3> Location: {{ course.course_location }} </h3>
@@ -24,10 +24,18 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
-    <a href="{% url 'course_waitlist' course.pk %}" class="btn btn-outline-primary me-2">Back</a>
-    <input type="Submit" class="btn btn-info" value="Join waitlist">
+    <a href="{% url 'course_detail' course.pk %}" class="btn btn-outline-primary me-2">Back</a>
+    <input type="Submit" class="btn btn-success" value="Join Waitlist">
     {% endbuttons %}
   </form>
+
+  {% if form.subject.errors %}
+  <ol>
+    {% for error in form.subject.errors %}
+    <li><strong>{{ error|escape }}</strong></li>
+    {% endfor %}
+  </ol>
+  {% endif %}
 
 </div>
 

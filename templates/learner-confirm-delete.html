@@ -13,6 +13,7 @@
   <div class="alert alert-danger" style="margin-top: 1.5em;" role="alert">
     <form method="post">{% csrf_token %}
       <h4>Are you sure you want to delete "{{ learner }}"?</h4>
+      <h4>This will unenroll them from any courses they are in.</h4>
       <input type="submit" class="btn btn-danger" value="Confirm">
     </form>
   </div>

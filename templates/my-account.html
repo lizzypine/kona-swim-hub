@@ -84,10 +84,12 @@
                 <br>
                 <h7> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</h7>
                 <br>
-                <p> Description: {{ course.course_description }} </p>
+                <p> Description: {{ course.course_description }}</p>
 
                 <h7> {{ course.course_start_date }} to {{ course.course_end_date }}</h7>
                 <h7> {{ course.course_start_time }} - {{ course.course_end_time }}</h7>
+                <br>
+                <h7> Every {{ course.course_day_of_week }}</h7>
                 <div><a href="{% url 'contact_instructor' course.course_instructor_id__pk %}" class="btn btn-info mt-2"
                     role="button">Contact Instructor</a>
                 </div>
