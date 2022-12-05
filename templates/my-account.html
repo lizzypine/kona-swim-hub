@@ -17,34 +17,51 @@
             <tr>
               <th>Course Name</th>
               <th>Roster</th>
+              <th>Waitlisted</th>
               <th>Options</th>
             </tr>
           </thead>
 
           <tbody>
+
             <tr>
-              {% for course, roster in rosters.items %}
-              <td>{{ course }} </td>
+              {% for course, value in rosters_and_waitlists.items %}
+
+              <td>Course name: {{ course }} </td>
               <td>
-                <ul>
-                  {% for learner in roster %}
-                  <li>{{ learner.first_name }} {{ learner.last_name }}</li>
-                  {% endfor %}
-                </ul>
+                {% for learner in course.roster %}
+                <li class="mx-3">{{ learner.first_name }} {{ learner.last_name }}</li>
+                {% empty %}
+                <p>There are no students on your roster.</p>
+                {% endfor %}
+                </br>
+                Numbers of spots left: {{ course.num_spots_available }}
               </td>
+
+              <td>
+                {% for learner in course.waitlist %}
+                <li class="mx-3">{{ learner.first_name }} {{ learner.last_name }}</li>
+                {% empty %}
+                <p>There are no students on your waitlist.</p>
+                {% endfor %}
+              </td>
+
               <td class="options">
                 <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit Course</a>
                 <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete
                   Course</a>
                 <a href="{% url 'contact_learners' course.pk %}" class="btn btn-info">Send a
-                  message</a>
+                  Message to Your Roster</a>
+                <a href="{% url 'contact_waitlist' course.pk %}" class="btn btn-success">Send a
+                  Message to Someone on Your Waitlist</a>
+                <a href="{% url 'contact_learners' course.pk %}" class="btn btn-success">Move a Learner From the
+                  Waitlist to the Roster</a>
               </td>
             </tr>
 
             {% empty %}
             <h7>You haven't created any courses yet.</h7>
             {% endfor %}
-
           </tbody>
         </table>
       </div>

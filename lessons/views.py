@@ -56,39 +56,52 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
     template_name = 'course_detail.html'
     context_object_name = 'course'
 
-# @ login_required
-# def join_waitlist(request, pk):
-#     # If this is a POST request then process the Form data
-#     if request.method == 'POST':
-        
-#         # Create a form instance and populate it with data from the request (binding):
-#         form = JoinWaitlist(request.POST)
+class RegisterLearner(LoginRequiredMixin, UpdateView):
+    form_class = CourseRegistrationForm
+    model = Course
+    template_name = 'course_registration.html'
+    success_url = '../../accounts/my-account'
+    
+    # Override get_form_kwargs method to pass the request object to the form class. 
+    def get_form_kwargs(self):
+        kwargs = super(RegisterLearner, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
-#         if form.is_valid(pk):
-#             instance = form.save(commit = False)
-#             associated_course_id = pk
-#             print(associated_course_id)
+    def form_valid(self, form):
+        instance = form.save(commit = False)
 
-#             # Save the many-to-many relationship.
-#             form.save_m2m()
+        # Save the many-to-many relationship.
+        form.save_m2m()
 
-#             learner = form.cleaned_data.get('learner')
-#             learner_on_waitlist = learner.id
-#             print(learner_on_waitlist)
-#             # Update linking table by adding learner to this course's roster.
-#             instance.learner_on_waitlist.add(learner_on_waitlist)
+        learner = form.cleaned_data.get('learner')
+        learner_on_roster = learner.id
+        # Update linking table by adding learner to this course's roster.
+        instance.learner_on_roster.add(learner_on_roster)
 
-#             # Update the number of spots that will be available after this learner registers.
-#             instance.num_spots_available = instance.num_spots_available - 1
+        # Update the number of spots that will be available after this learner registers.
+        instance.num_spots_available = instance.num_spots_available - 1
 
-#             # Commit the data and redirect to the confirmation page. 
-#             form.instance.save()
-#             return HttpResponseRedirect('waitlist_confirm_join/')
+        # Send a confirmation email to user
+        user = self.request.user.first_name
+        course_title = instance.course_title
+        instructor = instance.course_instructor
+        subject = 'You signed up for swim lessons through Kona Swim Hub'
+        html_template = 'emails/course_registration_success_email_family.html'
+        html_message = render_to_string(html_template, {"user": user, "learner": learner, "course": course_title})
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [(self.request.user.email)]
+        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
-#         else:
-#             form = JoinWaitlist() 
+        # Send a confirmation email to instructor
+        html_template = 'emails/course_registration_success_email_instructor.html'
+        html_message = render_to_string(html_template, {"instructor": instructor, "learner": learner, "course": course_title})
+        subject = 'A student signed up for your course through Kona Swim Hub'
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [(instance.course_instructor.email)]
+        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
-#     return TemplateResponse(request, 'waitlist_confirm_join.html')
+        return super().form_valid(form)
 
 class JoinWaitlist(LoginRequiredMixin, UpdateView):
     form_class = JoinWaitlistForm
@@ -147,50 +160,3 @@ class CourseDeleteView(LoginRequiredMixin, DeleteView):
 
 class ThanksPageView(LoginRequiredMixin, TemplateView):
     template_name = 'thanks.html'
-
-class RegisterLearner(LoginRequiredMixin, UpdateView):
-    form_class = CourseRegistrationForm
-    model = Course
-    template_name = 'course_registration.html'
-    success_url = '../../accounts/my-account'
-    
-    # Override get_form_kwargs method to pass the request object to the form class. 
-    def get_form_kwargs(self):
-        kwargs = super(RegisterLearner, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
-    def form_valid(self, form):
-        instance = form.save(commit = False)
-
-        # Save the many-to-many relationship.
-        form.save_m2m()
-
-        learner = form.cleaned_data.get('learner')
-        learner_on_roster = learner.id
-        # Update linking table by adding learner to this course's roster.
-        instance.learner_on_roster.add(learner_on_roster)
-
-        # Update the number of spots that will be available after this learner registers.
-        instance.num_spots_available = instance.num_spots_available - 1
-
-        # Send a confirmation email to user
-        user = self.request.user.first_name
-        course_title = instance.course_title
-        instructor = instance.course_instructor
-        subject = 'You signed up for swim lessons through Kona Swim Hub'
-        html_template = 'emails/course_registration_success_email_family.html'
-        html_message = render_to_string(html_template, {"user": user, "learner": learner, "course": course_title})
-        email_from = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [(self.request.user.email)]
-        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
-
-        # Send a confirmation email to instructor
-        html_template = 'emails/course_registration_success_email_instructor.html'
-        html_message = render_to_string(html_template, {"instructor": instructor, "learner": learner, "course": course_title})
-        subject = 'A student signed up for your course through Kona Swim Hub'
-        email_from = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [(instance.course_instructor.email)]
-        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
-
-        return super().form_valid(form)

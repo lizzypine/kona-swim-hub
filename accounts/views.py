@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.views.generic import DetailView, DeleteView, TemplateView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
-from accounts.forms import CustomUserCreationForm, LearnerAddForm, ContactForm, ContactInstructorForm, ContactLearnersForm
+from accounts.forms import CustomUserCreationForm, LearnerAddForm, ContactForm, ContactInstructorForm, ContactLearnersForm, ContactWaitlistForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.response import TemplateResponse
 from django.template.loader import render_to_string
@@ -71,12 +71,21 @@ def my_account_view (request):
     courses = Course.objects.filter(course_instructor=request.user)
 
     # Create a dictionary where the key is the course id and the value is the list of names on the roster for that course.
-    rosters = dict.fromkeys(courses)
-
+    rosters_and_waitlists = dict.fromkeys(courses)
     # Get the roster of learners for each course.
     for course in courses:
-        roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
-        rosters[course] = roster
+        course.roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
+        course.waitlist = Learner.objects.filter(waitlisted=course).values('first_name', 'last_name')
+        rosters_and_waitlists[course] = {'roster': course.roster, 'waitlist': course.waitlist}
+   
+    print(rosters_and_waitlists)
+
+    # waitlists = dict.fromkeys(courses)
+    # # Get the waitlist of learners for each course.
+    # for course in courses:
+    #     waitlist = Learner.objects.filter(waitlisted=course).values('first_name', 'last_name')
+    #     waitlists[course] = waitlist
+    #     print
 
     learners = Learner.objects.filter(associated_with_user=request.user)
 
@@ -93,8 +102,10 @@ def my_account_view (request):
     context = {
         'learners': learners,
         'learner_courses': learner_courses,
-        'courses': courses,
-        'rosters': rosters
+        'rosters_and_waitlists': rosters_and_waitlists
+        # 'courses': courses,
+        # 'rosters': rosters,
+        # 'waitlists': waitlists
     }
 
     return render(request, 'my-account.html', context)
@@ -261,3 +272,49 @@ def contact_learners(request, pk):
         form = ContactLearnersForm(request.POST, **kwargs)
 
     return render(request, 'contact_learners.html', {'form': form, 'course': course})
+
+def contact_waitlist(request, pk):
+
+    course = Course.objects.get(id=pk)
+
+    if request.method == 'POST':
+        kwargs = {'course': course}
+        form = ContactWaitlistForm(request.POST, **kwargs)
+
+        if form.is_valid():
+            # For each learner object, get the associated_with_user, then get the email of the parent user.
+            recipient_list = form.cleaned_data['recipient_list']
+            recipient_list_as_list = (list(recipient_list.all()))
+
+            # Add each parent's email address to list of bcc email recipients
+            bcc_recipient_list = []
+            for learner in recipient_list_as_list:
+                parent = learner.associated_with_user
+                parent_name = CustomUser.objects.get(id=parent.id).first_name
+                parent_email = CustomUser.objects.get(id=parent.id).email
+                bcc_recipient_list.append(parent_email)
+            
+            html_template = 'emails/message_instructor_to_learners.html'
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            html_message = render_to_string(html_template, {"user": parent_name, "instructor": course.course_instructor, "course": course.course_title, "message_content": message})
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email = [settings.DEFAULT_FROM_EMAIL]
+            message = EmailMessage(
+                subject, 
+                html_message, 
+                from_email, 
+                to_email,
+                bcc_recipient_list)
+            message.fail_silently = False
+            try:
+                message.send()
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect('contact_instructor_thanks')
+    
+    else:
+        kwargs = {'course': course}
+        form = ContactWaitlistForm(request.POST, **kwargs)
+
+    return render(request, 'contact_waitlist.html', {'form': form, 'course': course})

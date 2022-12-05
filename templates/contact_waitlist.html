@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% load bootstrap5 %}
 
-{% block title %}Contact Learners for {{ course.course_title }}| Kona Swim Hub{% endblock title%}
+{% block title %}Contact Waitlisted Learners for {{ course.course_title }}| Kona Swim Hub{% endblock title%}
 
 {% block content %}
 <script src="//code.jquery.com/jquery.min.js"></script>
 {{ form.media }}
 
 <div class="container">
-  <h1>Contact learners on the roster for {{ course.course_title }}</h1>
+  <h1>Contact waitlisted learners for {{ course.course_title }}</h1>
+  <h2>Did a spot open up on one of your rosters? Invite a family off of the waitlist.</h2>
 
   <form action="" method="post">
     {% csrf_token %}
