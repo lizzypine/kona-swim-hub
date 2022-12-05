@@ -11,13 +11,13 @@ App Features Implemented:
 - Create, update, and read a course 
 - Register for a course
 - Each user has an account dashboard that displays their learners and course rosters.
+- When a class roster is full, families are able to join a waitlist.
+- Instructors can send a message to the parents of children on their rosters.
+- Families can send a message to their child's swim instructor.
 
 App Features in Development:
-- When a class roster is full, families will be able to join a waitlist.
-- Instructors will be able to email the parents of children on their rosters.
 - Instructors will be able to unenroll a learner from one of their courses.
 - Users will receive email confirmations when they make changes to their account.
-- Families will be able to email their swim instructor.
 - Families will be able to pay for their swim classes through the app.
 - Users will be able to filter the available courses by age, location, etc.
 - Users will be able to create a profile page for others to view.
