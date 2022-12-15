@@ -71,7 +71,7 @@ class CourseCreationForm(ModelForm):
     class Meta:
         model = Course
         fields = '__all__'
-        exclude = ['course_instructor', 'learner_on_roster']
+        exclude = ['course_instructor', 'learner_on_roster', 'learner_on_waitlist']
         labels = {
         'course_age_range_min': 'Minimum age for this course',
         'course_age_range_max': 'Maximum age for this course',
@@ -117,7 +117,7 @@ class CourseRegistrationForm(ModelForm):
         widget=forms.RadioSelect,
         required=True,
         error_messages = {
-            'required':"Please Enter your Name"
+            'required':"Please Choose a Name"
             }
         )
     
@@ -135,7 +135,6 @@ class CourseRegistrationForm(ModelForm):
 
 form = CourseRegistrationForm
 
-
 class JoinWaitlistForm(ModelForm):
     def __init__(self, *args, **kwargs):
         # Grants access to the request object so that only learners of the current user are available as options.
@@ -146,7 +145,7 @@ class JoinWaitlistForm(ModelForm):
 
     class Meta:
         model = Course
-        fields = ['id', 'learner_on_waitlist']
+        fields = ['id', 'learner_on_roster']
         exclude = ['course_instructor', 'learner_on_roster', 'learner_on_waitlist', 'course_title', 'course_description', 'course_age_range_min', 'course_age_range_max',
             'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time']
         
@@ -175,10 +174,73 @@ class JoinWaitlistForm(ModelForm):
         
         return learner
 
-form = JoinWaitlistForm       
+form = JoinWaitlistForm            
 
 
-# class Waitlist(models.Model):  
-#     course_instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-#     associated_course = models.ForeignKey('Course', null=True, on_delete=models.CASCADE)
-#     listed_on_waitlist = models.ManyToManyField(to=Learner, related_name="waitlisted", blank=True)
+class MoveWaitlistedToRosterForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        course = kwargs.pop('course')
+        super(MoveWaitlistedToRosterForm, self).__init__(*args, **kwargs)
+        self.fields['learner_on_waitlist'].queryset = Learner.objects.filter(waitlisted=course)
+
+    class Meta:
+        model = Course
+        fields = ['id']
+        exclude = ['course_instructor', 'learner_on_roster', 'learner_on_waitlist', 'course_title', 'course_description', 'course_age_range_min', 'course_age_range_max',
+            'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time']
+        
+    learner_on_waitlist = forms.ModelMultipleChoiceField(
+        label=('Who would you like to move off of the waitlist onto your course roster?'),
+        queryset=Learner.objects.order_by('first_name'),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+        )
+    
+    def clean_learner(self):
+        from django.core.exceptions import ValidationError
+        instance = form.save(self, commit=False)
+        learner = self.cleaned_data.get('learner_on_waitlist')
+        # print(learner)
+        # If the selected learner's name is already on the roster or waitlist for this course, show an error message.
+        course = Course.objects.filter(id=instance.id)
+        roster = Learner.objects.filter(learners__in=course)
+        waitlist = Learner.objects.filter(waitlisted__in=course)
+        if learner in roster:
+            raise ValidationError('This learner is already registered for this course.')
+        if learner in waitlist:
+            raise ValidationError('This learner is already on the waitlist for this course.')
+        return learner
+
+form = MoveWaitlistedToRosterForm       
+
+
+# class MoveWaitlistedToRosterForm(forms.Form):
+
+#     def __init__(self, *args, **kwargs):
+#         course = kwargs.pop('course')
+#         super(MoveWaitlistedToRosterForm, self).__init__(*args, **kwargs)
+#         self.fields['learner'].queryset = Learner.objects.filter(waitlisted=course)
+
+#     learner = forms.ModelMultipleChoiceField(
+#         label=('Who would you like to move off of the waitlist onto your course roster?'),
+#         queryset=Learner.objects.order_by('first_name'),
+#         widget=forms.RadioSelect,
+#         required=True,
+#         )
+    
+#     def clean_learner(self):
+#         from django.core.exceptions import ValidationError
+#         instance = form.save(self, commit=False)
+#         learner = self.cleaned_data.get('learner')
+#         # If the selected learner's name is already on the roster or waitlist for this course, show an error message.
+#         course = Course.objects.filter(id=instance.id)
+#         roster = Learner.objects.filter(learners__in=course)
+#         waitlist = Learner.objects.filter(waitlisted__in=course)
+#         if learner in roster:
+#             raise ValidationError('This learner is already registered for this course.')
+#         if learner in waitlist:
+#             raise ValidationError('This learner is already on the waitlist for this course.')
+#         return learner
+
+# form = MoveWaitlistedToRosterForm       

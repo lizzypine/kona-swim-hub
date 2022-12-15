@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Leave Waitlist | Kona Swim Hub{% endblock title%}
+
+{% block content %}
+
+{{ form.media }}
+
+<div class="container">
+
+
+  <div class="alert alert-danger" style="margin-top: 1.5em;" role="alert">
+    <form method="post">{% csrf_token %}
+      <h4>Are you sure you want {{ learner }} to leave the waitlist for {{ course }}?</h4>
+      <input type="submit" class="btn btn-danger" value="Confirm">
+    </form>
+  </div>
+
+  <div class="text-start">
+    <a href="{% url 'my-account' %}" class="btn btn-outline-primary me-2">Back</a>
+  </div>
+
+</div>
+
+{% endblock content %}

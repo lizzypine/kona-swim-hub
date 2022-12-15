@@ -77,35 +77,24 @@ def my_account_view (request):
         course.roster = Learner.objects.filter(learners=course).values('first_name', 'last_name')
         course.waitlist = Learner.objects.filter(waitlisted=course).values('first_name', 'last_name')
         rosters_and_waitlists[course] = {'roster': course.roster, 'waitlist': course.waitlist}
-   
-    print(rosters_and_waitlists)
-
-    # waitlists = dict.fromkeys(courses)
-    # # Get the waitlist of learners for each course.
-    # for course in courses:
-    #     waitlist = Learner.objects.filter(waitlisted=course).values('first_name', 'last_name')
-    #     waitlists[course] = waitlist
-    #     print
 
     learners = Learner.objects.filter(associated_with_user=request.user)
 
     # Create a dictionary where the key is the learner id and the value is the list of courses this learner is enrolled in.
-    learner_courses = dict.fromkeys(learners)
+    learner_courses_and_waitlists = dict.fromkeys(learners)
 
     # Get the list of courses that each learner is enrolled in.
     for learner in learners:
-        course_list = Course.objects.filter(learner_on_roster=learner).values('course_title', 'course_instructor_id__first_name', 'course_instructor_id__last_name', 'course_instructor_id__pk', 'course_instructor_id__email', 'course_description', 
+        learner.enrolled = Course.objects.filter(learner_on_roster=learner).values('id', 'course_title', 'course_instructor_id__first_name', 'course_instructor_id__last_name', 'course_instructor_id__pk', 'course_instructor_id__email', 'course_description', 
         'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time')
-        
-        learner_courses[learner] = course_list
+        learner.on_waitlist = Course.objects.filter(learner_on_waitlist=learner).values('id', 'course_title', 'course_instructor_id__first_name', 'course_instructor_id__last_name', 'course_instructor_id__pk', 'course_instructor_id__email', 'course_description', 
+        'course_age_range_min', 'course_age_range_max', 'course_location', 'course_start_date', 'course_end_date', 'course_day_of_week', 'course_start_time', 'course_end_time')
+        learner_courses_and_waitlists[learner] = {'enrolled': learner.enrolled, 'waitlisted': learner.on_waitlist}
 
     context = {
         'learners': learners,
-        'learner_courses': learner_courses,
-        'rosters_and_waitlists': rosters_and_waitlists
-        # 'courses': courses,
-        # 'rosters': rosters,
-        # 'waitlists': waitlists
+        'rosters_and_waitlists': rosters_and_waitlists,
+        'learner_courses_and_waitlists': learner_courses_and_waitlists,
     }
 
     return render(request, 'my-account.html', context)
@@ -155,7 +144,7 @@ def learner_update(request, pk):
 
     context = {}
 
-    obj = get_object_or_404(Learner, pk = pk)
+    obj = get_object_or_404(Learner, pk=pk)
 
     form = LearnerAddForm(request.POST or None, instance = obj)
 
@@ -164,7 +153,7 @@ def learner_update(request, pk):
 
         # Commit the data and redirect to the 'my learners' page. 
         form.save()
-        return HttpResponseRedirect('../mylearners')
+        return HttpResponseRedirect('../my-account')
     
     # Add form dictionary to context
     context['form'] = form

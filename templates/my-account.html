@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load bootstrap5 %}
 
 {% block title %}My Account | Kona Swim Hub{% endblock title%}
 
@@ -18,7 +19,7 @@
               <th>Course Name</th>
               <th>Roster</th>
               <th>Waitlisted</th>
-              <th>Options</th>
+              <th>Other Options</th>
             </tr>
           </thead>
 
@@ -27,35 +28,46 @@
             <tr>
               {% for course, value in rosters_and_waitlists.items %}
 
-              <td>Course name: {{ course }} </td>
-              <td>
+              <td class="col-2">{{ course }}</td>
+
+
+              <td class="col-3">
+                {% if course.roster %}
                 {% for learner in course.roster %}
+
                 <li class="mx-3">{{ learner.first_name }} {{ learner.last_name }}</li>
-                {% empty %}
-                <p>There are no students on your roster.</p>
                 {% endfor %}
                 </br>
-                Numbers of spots left: {{ course.num_spots_available }}
+                <p>Numbers of spots left: {{ course.num_spots_available }}</p>
+                <a href="{% url 'contact_learners' course.pk %}" class="btn btn-info m-2">Send a
+                  Message to Your Roster</a>
+                {% else %}
+                <p>There are no students on your roster.</p>
+                <p>Numbers of spots left: {{ course.num_spots_available }}</p>
+                {% endif %}
+
+
               </td>
 
-              <td>
+
+
+              <td class="col-3">
+                {% if course.waitlist %}
                 {% for learner in course.waitlist %}
                 <li class="mx-3">{{ learner.first_name }} {{ learner.last_name }}</li>
-                {% empty %}
-                <p>There are no students on your waitlist.</p>
                 {% endfor %}
+                <a href="{% url 'contact_waitlist' course.pk %}" class="btn btn-message-waitlist m-2">Send a
+                  Message to a Waitlisted Learner</a>
+                <a href="{% url 'move_waitlisted_to_roster' course.pk %}" class="btn btn-message m-2">Move a Learner
+                  From the Waitlist to the Roster</a>
+                {% else %}
+                <p>There are no students on your waitlist.</p>
+                {% endif %}
               </td>
-
-              <td class="options">
-                <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning" role="button">Edit Course</a>
-                <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger">Delete
+              <td>
+                <a href=" {% url 'course-edit' course.pk %}" class="btn btn-warning m-2">Edit Course</a>
+                <a href="{% url 'course-delete' course.pk %}" class="btn btn-danger m-2">Delete
                   Course</a>
-                <a href="{% url 'contact_learners' course.pk %}" class="btn btn-info">Send a
-                  Message to Your Roster</a>
-                <a href="{% url 'contact_waitlist' course.pk %}" class="btn btn-success">Send a
-                  Message to Someone on Your Waitlist</a>
-                <a href="{% url 'contact_learners' course.pk %}" class="btn btn-success">Move a Learner From the
-                  Waitlist to the Roster</a>
               </td>
             </tr>
 
@@ -88,11 +100,11 @@
           </thead>
 
           <tbody>
-            {% for learner, courses in learner_courses.items %}
+            {% for learner, value in learner_courses_and_waitlists.items %}
             <tr>
               <td>{{ learner }}</td>
               <td>
-                {% for course in courses %}
+                {% for course in learner.enrolled %}
                 <h5> Course Title: {{ course.course_title }}</h5>
                 <h7>Course Instructor: {{ course.course_instructor_id__first_name }}
                   {{course.course_instructor_id__last_name }}</h7>
@@ -113,11 +125,43 @@
                 <hr class="enrolled-course-description">
                 {% empty %}
                 <h7>Not registered for any courses.</h7>
+                <hr class="enrolled-course-description">
                 {% endfor %}
+                <hr class="enrolled-course-description">
+                <div class="waitlisted">
+                  {% if learner.on_waitlist%}
+                  <h3>Waitlisted</h3>
+                  {% for course in learner.on_waitlist %}
+                  <h5> Course Title: {{ course.course_title }}</h5>
+                  <h7>Course Instructor: {{ course.course_instructor_id__first_name }}
+                    {{course.course_instructor_id__last_name }}</h7>
+                  <br>
+                  <h7> Location: {{ course.course_location }}</h7>
+                  <br>
+                  <h7> Age: {{ course.course_age_range_min }} to {{ course.course_age_range_max }}</h7>
+                  <br>
+                  <p> Description: {{ course.course_description }}</p>
+
+                  <h7> {{ course.course_start_date }} to {{ course.course_end_date }}</h7>
+                  <h7> {{ course.course_start_time }} - {{ course.course_end_time }}</h7>
+                  <br>
+                  <h7> Every {{ course.course_day_of_week }}</h7>
+                  <div><a href="{% url 'contact_instructor' course.course_instructor_id__pk %}"
+                      class="btn-message-waitlist btn m-2" role="button">Contact Instructor</a>
+                    <a href="{% url 'waitlist_confirm_removal' course.id learner.id %}" class="btn btn-danger m-2"
+                      role="button">Leave the
+                      Waitlist</a>
+                  </div>
+                  {% endfor %}
+                  {% else %}
+                  <h7>Not waitlisted for any courses.</h7>
+                  {% endif %}
+                </div>
               </td>
               <td>
-                <a href="{% url 'learner-update' learner.pk %}" class="btn btn-warning" role="button">Edit Learner</a>
-                <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger">Delete Learner</a>
+                <a href="{% url 'learner-update' learner.pk %}" class="btn btn-warning m-2" role="button">Edit
+                  Learner</a>
+                <a href="{% url 'learner-delete' learner.pk %}" class="btn btn-danger m-2">Delete Learner</a>
               </td>
               {% empty %}
               <h7>You don't have any learners registered yet.</h7>

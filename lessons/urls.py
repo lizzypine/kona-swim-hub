@@ -12,7 +12,11 @@ urlpatterns = [
     path('<pk>/course-delete', CourseDeleteView.as_view(), name='course-delete'),
     path('course_registration/<pk>', RegisterLearner.as_view(), name='course_registration'),
     path('course_waitlist/<pk>', JoinWaitlist.as_view(), name='waitlist'),
-    # path('waitlist/<pk>', views.JoinWaitlist.as_view(), name='join_waitlist'),
+    path('move_waitlisted_to_roster/<int:pk>/', views.move_waitlisted_to_roster, name='move_waitlisted_to_roster'),
+    # path('course/<int:course_id>/waitlist_confirm_removal/learner/<int:learner_id>', LeaveWaitlist.as_view(), name='waitlist_confirm_removal'),
+    path('course/<int:pk1>/waitlist_confirm_removal/learner/<int:pk2>', views.waitlist_confirm_removal, name='waitlist_confirm_removal'),
+    # path('waitlist_confirm_removal/<int:pk>', LeaveWaitlist.as_view(), name='waitlist_confirm_removal'),
+    # path('move_waitlisted_to_roster/<int:pk>/', MoveWaitlistedToRoster.as_view(), name='move_waitlisted_to_roster')
     # path('profile/', LearnerListView.as_view(), name='learner_create')
     # path('profile/', LearnerListView.as_view(), name='profile')
 ]

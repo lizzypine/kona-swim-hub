@@ -2,17 +2,19 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin, messages
 from lessons.models import Course
-from lessons.forms import CourseCreationForm, CourseRegistrationForm, JoinWaitlistForm
+from accounts.models import Learner
+from lessons.forms import CourseCreationForm, CourseRegistrationForm, JoinWaitlistForm, MoveWaitlistedToRosterForm
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
-# from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
-from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail, EmailMessage, BadHeaderError
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect, HttpResponse
 # from django.urls import reverse
 # from filters import AgeFilter
 
@@ -40,7 +42,6 @@ def course_create(request):
     else:
         form = CourseCreationForm() 
 
-    # return render(request, 'lessons/course_new.html', {'form': form})
     return TemplateResponse(request, 'course_create.html', {'form': form})
 
 class CourseListView(LoginRequiredMixin, ListView):
@@ -116,7 +117,7 @@ class JoinWaitlist(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        # form.instance = form.save(commit=False)
+        form.instance = form.save(commit=False)
         # form.instance.associated_course_id = self.pk
         instance = form.save(commit = False)
 
@@ -125,6 +126,7 @@ class JoinWaitlist(LoginRequiredMixin, UpdateView):
 
         learner = form.cleaned_data.get('learner')
         learner_on_waitlist = learner.id
+        
         # Update linking table by adding learner to this course's roster.
         # form.instance.learner_on_waitlist.add(learner_on_waitlist)
         instance.learner_on_waitlist.add(learner_on_waitlist)
@@ -133,6 +135,133 @@ class JoinWaitlist(LoginRequiredMixin, UpdateView):
         # instance.num_spots_available = instance.num_spots_available - 1
 
         return super().form_valid(form)
+
+@ login_required
+def waitlist_confirm_removal(request, pk1, pk2):
+
+    context = {}
+    course = get_object_or_404(Course, id=pk1)
+    learner_on_waitlist = get_object_or_404(Learner, id=pk2)
+
+    # Add form dictionary to context
+    context['course'] = course
+    context['learner'] = learner_on_waitlist
+
+    # Check if the form is valid:
+    if request.method == 'POST':
+
+        # remove_learner_from_waitlist()
+        course.learner_on_waitlist.remove(learner_on_waitlist.id)
+
+        return HttpResponseRedirect('/../../../accounts/my-account')
+
+    return TemplateResponse(request, 'waitlist_confirm_removal.html', context)
+
+# class MoveWaitlistedToRoster(LoginRequiredMixin, UpdateView):
+#     form_class = MoveWaitlistedToRosterForm
+#     model = Course
+#     template_name = 'move_waitlisted_to_roster.html'
+#     success_url = '../../accounts/my-account'
+
+#     # Override get_form_kwargs method to pass the request object to the form class. 
+#     # def get_form_kwargs(self):
+#     #     kwargs = super(MoveWaitlistedToRoster, self).get_form_kwargs()
+#     #     kwargs['request'] = self.request
+#     #     return kwargs
+
+#     def form_valid(self, form):
+#         instance = form.save(commit = False)
+
+#         # Save the many-to-many relationship.
+#         form.save_m2m()
+
+#         learner = form.cleaned_data.get('learner')
+#         learner_on_roster = learner.id
+#         # Update linking table by adding learner to this course's roster.
+#         instance.learner_on_roster.add(learner_on_roster)
+#         # IS THIS CAUSING TROUBLE?
+#         instance.learner_on_waitlist.update(learner_on_waitlist=None)
+
+#         # Update the number of spots that will be available after this learner registers.
+#         instance.num_spots_available = instance.num_spots_available - 1
+
+#         return super().form_valid(form)
+
+@ login_required
+def move_waitlisted_to_roster(request, pk):
+
+    course = Course.objects.get(id=pk)
+
+    if request.method == 'POST':
+        kwargs = {'course': course}
+        form = MoveWaitlistedToRosterForm(request.POST, **kwargs)
+
+        # Testing this function
+        # def form_valid(self, form):
+        #     instance = form.save(commit = False())
+        
+        #     form.save_m2m()
+
+        #     move_from_waitlist_to_roster = form.cleaned_data['learner_on_waitlist']
+        #     move_from_waitlist_to_roster_as_list = (list(move_from_waitlist_to_roster.all()))
+        #     instance.learner_on_roster.add(move_from_waitlist_to_roster)
+        #     instance.num_spots_available = instance.num_spots_available - 1
+        #     print(move_from_waitlist_to_roster_as_list)
+
+        #     return super().form_valid(form)
+
+        # Other version
+        if form.is_valid():
+
+            move_from_waitlist_to_roster = form.cleaned_data['learner_on_waitlist']
+            #  print(move_from_waitlist_to_roster)
+            
+            move_from_waitlist_to_roster_as_list = (list(move_from_waitlist_to_roster.all()))
+            print(move_from_waitlist_to_roster_as_list)
+
+            # Update linking table by adding learner to this course's roster
+            # and removing the learner from the waitlist.
+            form.instance.learner_on_roster.add(move_from_waitlist_to_roster_as_list)
+            # form.instance.learner_on_waitlist.delete(move_from_waitlist_to_roster_as_list)
+            form.instance.learner_on_waitlist.remove(move_from_waitlist_to_roster_as_list)
+            # or try the clear method below
+            # form.instance.learner_on_waitlist.clear(move_from_waitlist_to_roster_as_list )
+
+
+            # Save the many-to-many relationship.
+            form.instance.save_m2m()
+
+            form.instance.save()
+
+           
+
+            # Update the number of spots that will be available after this learner registers.
+            # form.instance.num_spots_available = form.instance.num_spots_available - 1
+
+            # html_template = 'emails/message_instructor_to_learners.html'
+            # subject = form.cleaned_data['subject']
+            # message = form.cleaned_data['message']
+            # html_message = render_to_string(html_template, {"instructor": course.course_instructor, "course": course.course_title, "message_content": message})
+            # from_email = settings.DEFAULT_FROM_EMAIL
+            # to_email = [settings.DEFAULT_FROM_EMAIL]
+            # message = EmailMessage(
+            #     subject, 
+            #     html_message, 
+            #     from_email, 
+            #     to_email)
+            # message.fail_silently = False
+            # try:
+            #     message.send()
+            # except BadHeaderError:
+            #     return HttpResponse('Invalid header found.')
+            # return redirect('contact_instructor_thanks')
+
+    else:
+        kwargs = {'course': course}
+        form = MoveWaitlistedToRosterForm(request.POST, **kwargs)
+
+    return render(request, 'move_waitlisted_to_roster.html', {'form': form, 'course': course})
+
 
 @ login_required
 def course_update(request, pk):

@@ -20,7 +20,6 @@
     <h3> {{ course.course_start_date }} to {{ course.course_end_date }} </h3>
     <h3> Every {{ course.course_day_of_week }} </h3>
     <h3> {{ course.course_start_time }} - {{ course.course_end_time }} </h3>
-    <h3> Number of spots available: {{ course.num_spots_available }} </h3>
 
     {% if course.num_spots_available <= 0 %} <div class="text-start">
       <a href="{% url 'course_list' %}" class="btn btn-outline-primary me-2">Back</a>
@@ -28,6 +27,7 @@
         aria-disabled="true" role="button">Register</a>
       <a href="{% url 'waitlist' course.pk %}"" type=" submit" class="btn btn-info " role="button">Join
         waitlist</a>
+      <h3>This course is full. You may join the waitlist.</h3>
 </div>
 
 {% else %}

@@ -22,3 +22,34 @@
   transition: .4s;
   opacity: .5
 }
+
+.btn-message {
+  background-color: #14bdad !important;
+}
+
+.btn-message:hover {
+  color: #000;
+  background-color: #11a899 !important;
+  border-color: #11a899 !important;
+}
+
+.btn-message-waitlist {
+  background-color: #fd7e14 !important;
+}
+
+.btn-message-waitlist:hover {
+  color: #000;
+  background-color: #eb7413 !important;
+  border-color: #eb7413 !important;
+}
+
+.my-account-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.waitlisted {
+  color: gray;
+  font-style: italic
+}
