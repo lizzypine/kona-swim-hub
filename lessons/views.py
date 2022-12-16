@@ -127,7 +127,6 @@ class JoinWaitlist(LoginRequiredMixin, UpdateView):
         learner_on_waitlist = learner.id
 
         # Update linking table by adding learner to this course's roster.
-        # form.instance.learner_on_waitlist.add(learner_on_waitlist)
         instance.learner_on_waitlist.add(learner_on_waitlist)
 
         return super().form_valid(form)
@@ -161,18 +160,31 @@ class MoveWaitlistedToRoster(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         instance = form.save(commit = False)
-
-        # Save the many-to-many relationship.
         form.save_m2m()
-
         learner = form.cleaned_data.get('learner')
         learner = learner.id
-        # Update linking table by adding learner to this course's roster.
         instance.learner_on_roster.add(learner)
         instance.learner_on_waitlist.remove(learner)
-
-        # Update the number of spots that will be available after this learner registers.
         instance.num_spots_available = instance.num_spots_available - 1
+
+        # Send a confirmation email to user
+        user = self.request.user.first_name
+        course_title = instance.course_title
+        instructor = instance.course_instructor
+        subject = 'Kona Swim Hub | A swim instructor moved you off their waitlist!'
+        html_template = 'emails/course_registration_success_email_family.html'
+        html_message = render_to_string(html_template, {'user': user, 'learner': learner, 'course': course_title})
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [(self.request.user.email)]
+        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
+
+        # Send a confirmation email to instructor
+        html_template = 'emails/course_registration_success_email_instructor.html'
+        html_message = render_to_string(html_template, {'instructor': instructor, 'learner': learner, 'course': course_title})
+        subject = 'Kona Swim Hub | You successfully moved a student from the waitlist to the roster'
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [(instance.course_instructor.email)]
+        send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
         return super().form_valid(form)
 

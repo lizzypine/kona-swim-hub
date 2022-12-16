@@ -166,6 +166,7 @@ class LearnerDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'learner-confirm-delete.html'
     success_url = '../../my-account'
 
+    
     # After the learner is deleted, if a spot becomes available in a course, email the instructor
     # to invite a learner from the waitlist.
     

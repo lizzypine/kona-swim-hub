@@ -12,7 +12,7 @@
   <div class="alert alert-danger" style="margin-top: 1.5em;" role="alert">
     <form method="post">{% csrf_token %}
       <h4>Are you sure you want {{ learner }} to leave the waitlist for {{ course }}?</h4>
-      <input type="submit" class="btn btn-danger" value="Confirm">
+      <button type="submit" name="remove_learner_from_waitlist" class="btn btn-danger" value="Confirm">
     </form>
   </div>
 
