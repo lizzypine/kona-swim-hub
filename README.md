@@ -12,6 +12,7 @@ App Features Implemented:
 - Register for a course
 - Each user has an account dashboard that displays their learners and course rosters.
 - When a class roster is full, families are able to join a waitlist.
+- Instructors can move waitlisted learners onto their course roster when there is space.
 - Instructors can send a message to the parents of children on their rosters.
 - Families can send a message to their child's swim instructor.
 
