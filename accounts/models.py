@@ -20,7 +20,7 @@ class Learner(models.Model):
     birthday = models.DateField()
     def __str__(self):
         return self.first_name[:50] + " " + self.last_name[:50]
-
+    
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     bio = models.TextField()

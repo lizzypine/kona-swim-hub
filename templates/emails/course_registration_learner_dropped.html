@@ -1,0 +1,12 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktranslate %}Aloha, {{ instructor }}! A learner dropped out of your course, {{ course }}, on
+Kona Swim Hub. You can view your course roster and invite a learner off of the waitlist here: {% endblocktranslate %}
+
+{% block link %}
+{{ "http://127.0.0.1:8000/accounts/my-account" }}
+{% endblock %}
+
+{% translate "Thanks for using Kona Swim Hub!" %}
+
+{% endautoescape %}

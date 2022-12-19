@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail, BadHeaderError
+import django.dispatch
 
 def user_register(request):
     if request.method == 'POST':
@@ -161,16 +162,41 @@ def learner_update(request, pk):
     return TemplateResponse(request, 'learner-update.html', context)
 
 # Delete a learner
-class LearnerDeleteView(LoginRequiredMixin, DeleteView):
-    model = Learner
-    template_name = 'learner-confirm-delete.html'
-    success_url = '../../my-account'
+def learner_delete(request, id):
+    context = {}
+    learner = get_object_or_404(Learner, id=id)
 
+    # Look up list of rosters this learner is on.
+    rosters = Course.objects.all().filter(learner_on_roster=learner)
     
-    # After the learner is deleted, if a spot becomes available in a course, email the instructor
-    # to invite a learner from the waitlist.
-    
-    # Otherwise, increase the number of spots available in the roster.
+    context = {
+        'learner': learner,
+        'rosters': rosters,
+    }
+
+    if request.method == 'POST':
+        for roster in rosters:   
+            if roster.num_spots_available < 1: 
+                # email the instructor that a spot has opened up.
+                html_template = 'emails/course_registration_learner_dropped.html'
+                html_message = render_to_string(html_template, {'instructor': roster.course_instructor.first_name, 'learner': learner, 'course': roster.course_title})
+                subject = 'Kona Swim Hub | A learner dropped out of your course'
+                email_from = settings.DEFAULT_FROM_EMAIL
+                recipient_list = [(roster.course_instructor.email)]
+                send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
+            # else, just add a spot back to the course.
+            else: 
+                # roster.course_update(roster.num_spots_available += 1)
+                # roster_space_update = django.dispatch.signal()
+                # roster_space_update.send(sender=self.__Learner__)
+                print("add a space")
+                # roster_add_space.send(sender=self.__Learner__, instance=roster)
+                roster.num_spots_available = roster.num_spots_available + 1
+                roster.save()
+                # model = profiles.models.UserProfile.objects.filter(user_id=instance.user.id).update(joined=joined)
+        learner.delete()
+        return HttpResponseRedirect('/accounts/my-account')
+    return render(request, 'learner_confirm_delete.html', context)
 
 # Contact - send a message to the site admin
 def contactView(request):

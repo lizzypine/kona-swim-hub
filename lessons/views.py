@@ -147,7 +147,7 @@ def waitlist_confirm_removal(request, pk1, pk2):
 
         # remove_learner_from_waitlist()
         course.learner_on_waitlist.remove(learner_on_waitlist.id)
-
+         
         return HttpResponseRedirect('/../../../accounts/my-account')
 
     return TemplateResponse(request, 'waitlist_confirm_removal.html', context)
@@ -162,9 +162,8 @@ class MoveWaitlistedToRoster(LoginRequiredMixin, UpdateView):
         instance = form.save(commit = False)
         form.save_m2m()
         learner = form.cleaned_data.get('learner')
-        learner = learner.id
-        instance.learner_on_roster.add(learner)
-        instance.learner_on_waitlist.remove(learner)
+        instance.learner_on_roster.add(learner.id)
+        instance.learner_on_waitlist.remove(learner.id)
         instance.num_spots_available = instance.num_spots_available - 1
 
         # Send a confirmation email to user
