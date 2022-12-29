@@ -15,8 +15,6 @@ from django.http import HttpResponseRedirect
 from django.core.mail import send_mail, EmailMessage, BadHeaderError
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
-# from django.urls import reverse
-# from filters import AgeFilter
 
 # Instructor status required to create a course.
 @login_required
