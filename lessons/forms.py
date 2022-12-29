@@ -5,7 +5,6 @@ from lessons.models import Course
 from accounts.models import Learner
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from widgets import RangeInput
 # from django.conf import settings
 # from django.core.mail import send_mail
 # from django.template.loader import render_to_string
