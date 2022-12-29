@@ -129,7 +129,8 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
+# DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = 'lizzy@lehuaweb.com'
 CONTACT_EMAIL = env.str('CONTACT_EMAIL')
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
