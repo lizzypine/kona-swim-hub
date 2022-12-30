@@ -1,36 +1,22 @@
 from pathlib import Path
 from environs import Env
-# import environ
 from decouple import config
 import os
 
 env = Env()
 env.read_env()
-# env = environ.Env()
-# env = environ.Env(
-#     # set casting, default value
-#     DEBUG=(bool, False)
-# )
-# environ.Env.read_env()
 
 # Set the project base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Take environment variables from .env file
-# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
-# DEBUG = env('DEBUG')
 
-# SECRET_KEY = env.str('SECRET_KEY')
 SECRET_KEY = env.str('SECRET_KEY')
 
 ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Application definition
-
 INSTALLED_APPS = [
     'lessons.apps.LessonsConfig',
     'accounts.apps.AccountsConfig',
@@ -67,7 +53,6 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
         ],
-        #'DIRS': [str(BASE_DIR.joinpath('templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,13 +71,6 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {'default': env.dj_db_url('DATABASE_URL')}
-    # 'default': ('DATABASE_URL')
-    # 'default': env.db(),
-
-    # 'extra': env.db_url(
-    #     'SQLITE_URL',
-    #     default='sqlite:///db.sqlite3'
-    # )
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -129,15 +107,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
-# STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -162,25 +133,6 @@ EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 SENDGRID_API_KEY = config('SENDGRID_API_KEY')
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-
-
-# DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL")
-# DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
-# DEFAULT_FROM_EMAIL = 'lizzy@lehuaweb.com'
-# # CONTACT_EMAIL = env.str("CONTACT_EMAIL")
-# # CONTACT_EMAIL = env('CONTACT_EMAIL')
-CONTACT_EMAIL = 'lizzy@lehuaweb.com'
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_HOST_USER = 'apikey'
-
-
-
-# SENDGRID_API_KEY = env('SENDGRID_API_KEY')
-
-
-# EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-
-
-# EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
+CONTACT_EMAIL = config('CONTACT_EMAIL')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
