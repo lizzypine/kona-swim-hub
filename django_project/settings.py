@@ -5,7 +5,11 @@ import os
 
 # env = Env()
 # env.read_env()
-env = environ.Env()
+# env = environ.Env()
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 # environ.Env.read_env()
 
 # Set the project base directory
