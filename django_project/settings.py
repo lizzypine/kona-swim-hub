@@ -1,19 +1,26 @@
 from pathlib import Path
-from environs import Env
+# from environs import Env
 import environ
 import os
 
 # env = Env()
 # env.read_env()
 env = environ.Env()
-environ.Env.read_env()
+# environ.Env.read_env()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Set the project base directory
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=False)
+# DEBUG = env.bool('DEBUG', default=False)
+DEBUG = env('DEBUG')
 
-SECRET_KEY = env.str('SECRET_KEY')
+# SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
 
@@ -73,7 +80,13 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 DATABASES = {
     # 'default': env.dj_db_url('DATABASE_URL')
-    'default': ('DATABASE_URL')
+    # 'default': ('DATABASE_URL')
+    'default': env.db(),
+
+    'extra': env.db_url(
+        'SQLITE_URL',
+        default='sqlite:///db.sqlite3'
+    )
 }
 
 # Password validation
