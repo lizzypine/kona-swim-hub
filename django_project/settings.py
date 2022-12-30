@@ -1,15 +1,16 @@
 from pathlib import Path
-# from environs import Env
-import environ
+from environs import Env
+# import environ
+from decouple import config
 import os
 
-# env = Env()
-# env.read_env()
+env = Env()
+env.read_env()
 # env = environ.Env()
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
+# env = environ.Env(
+#     # set casting, default value
+#     DEBUG=(bool, False)
+# )
 # environ.Env.read_env()
 
 # Set the project base directory
@@ -17,16 +18,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env.bool('DEBUG', default=False)
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)
+# DEBUG = env('DEBUG')
 
 # SECRET_KEY = env.str('SECRET_KEY')
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY')
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1', '.konaswimhub.com']
+ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -63,7 +64,9 @@ ROOT_URLCONF = 'django_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         #'DIRS': [str(BASE_DIR.joinpath('templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -82,16 +85,14 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    # 'default': env.dj_db_url('DATABASE_URL')
+DATABASES = {'default': env.dj_db_url('DATABASE_URL')}
     # 'default': ('DATABASE_URL')
-    'default': env.db(),
+    # 'default': env.db(),
 
-    'extra': env.db_url(
-        'SQLITE_URL',
-        default='sqlite:///db.sqlite3'
-    )
-}
+    # 'extra': env.db_url(
+    #     'SQLITE_URL',
+    #     default='sqlite:///db.sqlite3'
+    # )
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -128,8 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
@@ -154,15 +157,22 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL")
-# DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
-DEFAULT_FROM_EMAIL = 'lizzy@lehuaweb.com'
-# CONTACT_EMAIL = env.str("CONTACT_EMAIL")
-# CONTACT_EMAIL = env('CONTACT_EMAIL')
-CONTACT_EMAIL = 'lizzy@lehuaweb.com'
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
-# SENDGRID_API_KEY = env.str('SENDGRID_API_KEY')
+SENDGRID_API_KEY = config('SENDGRID_API_KEY')
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+
+
+# DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL")
+# DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+# DEFAULT_FROM_EMAIL = 'lizzy@lehuaweb.com'
+# # CONTACT_EMAIL = env.str("CONTACT_EMAIL")
+# # CONTACT_EMAIL = env('CONTACT_EMAIL')
+CONTACT_EMAIL = 'lizzy@lehuaweb.com'
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'apikey'
+
 
 
 # SENDGRID_API_KEY = env('SENDGRID_API_KEY')
