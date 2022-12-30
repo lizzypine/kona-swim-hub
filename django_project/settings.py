@@ -26,7 +26,7 @@ DEBUG = env('DEBUG')
 # SECRET_KEY = env.str('SECRET_KEY')
 SECRET_KEY = env('SECRET_KEY')
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1', '.konaswimhub.com']
 
 # Application definition
 
@@ -129,7 +129,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
 # STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
