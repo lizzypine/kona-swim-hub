@@ -14,7 +14,7 @@ DEBUG = env.bool('DEBUG', default=False)
 
 SECRET_KEY = env.str('SECRET_KEY')
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1', 'konaswimhub.com']
+ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1', '.konaswimhub.com']
 
 # Application definition
 INSTALLED_APPS = [
