@@ -16,8 +16,6 @@ from django.core.mail import send_mail, EmailMessage, BadHeaderError
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 
-from decouple import config
-
 # Instructor status required to create a course.
 @login_required
 @user_passes_test(lambda user: user.is_instructor)
@@ -91,8 +89,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         html_template = 'emails/course_registration_success_email_family.html'
         html_message = render_to_string(html_template, {"user": user, "learner": learner, "course": course_title})
         # email_from = settings.DEFAULT_FROM_EMAIL
-        email_from = config('DEFAULT_FROM_EMAIL')
-        # email_from = 'lizzy@lehuaweb.com'
+        email_from = 'lizzy@lehuaweb.com'
         recipient_list = [(self.request.user.email)]
         # recipient_list = [self.request.user.email]
         # recipient_list = [('elizabethpine4@gmail.com')]
@@ -103,8 +100,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         html_message = render_to_string(html_template, {"instructor": instructor, "learner": learner, "course": course_title})
         subject = 'A student signed up for your course through Kona Swim Hub'
         # email_from = settings.DEFAULT_FROM_EMAIL
-        email_from = config('DEFAULT_FROM_EMAIL')
-        # email_from = 'lizzy@lehuaweb.com'
+        email_from = 'lizzy@lehuaweb.com'
         recipient_list = [(instance.course_instructor.email)]
         # recipient_list = [instance.course_instructor.email]
         # recipient_list = [('elizabethpine4@gmail.com')]
