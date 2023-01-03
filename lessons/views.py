@@ -91,7 +91,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         email_from = settings.DEFAULT_FROM_EMAIL
         # recipient_list = [(self.request.user.email)]
         # recipient_list = [self.request.user.email]
-        recipient_list = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [('elizabethpine4@gmail.com')]
         send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
         # Send a confirmation email to instructor
@@ -101,7 +101,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         email_from = settings.DEFAULT_FROM_EMAIL
         # recipient_list = [(instance.course_instructor.email)]
         # recipient_list = [instance.course_instructor.email]
-        recipient_list = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [('elizabethpine4@gmail.com')]
         send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
         return super().form_valid(form)
