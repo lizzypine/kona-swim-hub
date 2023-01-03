@@ -127,22 +127,12 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'apikey'
-# EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY')
-# CONTACT_EMAIL = config('CONTACT_EMAIL')
-# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
-# EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY')
 EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')
-CONTACT_EMAIL = os.getenv('CONTACT_EMAIL')
-# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+CONTACT_EMAIL = 'Kona Swim Hub <team@konaswimhub.com>'
 DEFAULT_FROM_EMAIL = 'Kona Swim Hub <team@konaswimhub.com>'
