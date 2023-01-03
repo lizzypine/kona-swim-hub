@@ -205,10 +205,11 @@ def contactView(request):
     else:
         form = ContactForm(request.POST)
         if form.is_valid():
+            from_email = form.cleaned_data['from_email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             try:
-                send_mail(subject, message, settings.CONTACT_EMAIL, [settings.DEFAULT_FROM_EMAIL])
+                send_mail(subject, message, from_email, [(settings.DEFAULT_FROM_EMAIL)], fail_silently=False)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return redirect('contact_thanks/')
