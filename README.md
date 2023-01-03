@@ -18,7 +18,6 @@ App Features Implemented:
 
 App Features in Development:
 - Instructors will be able to unenroll a learner from one of their courses.
-- Users will receive email confirmations when they make changes to their account.
 - Families will be able to pay for their swim classes through the app.
 - Users will be able to filter the available courses by age, location, etc.
 - Users will be able to create a profile page for others to view.
