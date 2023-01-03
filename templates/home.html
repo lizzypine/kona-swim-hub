@@ -12,17 +12,46 @@
     <h1 class="display-4">Kona Swim Hub</h1>
     <p class="lead">Find local swim lessons for your keiki.</p>
     <hr class="my-4">
-    <p>For swim instructors: Under your name, choose My Account to create and manage your lessons.</p>
-    <p>For 'ohanas: Under your name, choose My Account to add your keiki. Browse <a href="{% url 'course_list' %}"
-        class="">courses</a> to find lessons.</p>
+
+    <div class="row pt-2">
+      <div class="col mh-100 d-inline-block p-5 m-1 text-bg-light rounded-3">
+        <h2>For Swim Instructors</h2>
+        <p class="lead">Go to <a href="{% url 'my-account'%}">my account</a> to create and manage your lessons.
+        </p>
+      </div>
+
+      <div class="col mh-100 d-inline-block p-5 m-1 text-bg-light rounded-3">
+        <h2>For Families</h2>
+        <p class="lead">Go to <a href="{% url 'my-account'%}">my account</a> to add your keiki. Browse <a
+            href="{% url 'course_list' %}">courses</a> to find lessons.</p>
+        </p>
+      </div>
+    </div>
 
     {% else %}
     <div class="jumbotron text-center">
       <h1 class="display-4">Kona Swim Hub</h1>
       <p class="lead">Find local swim lessons for your keiki.</p>
       <hr class="my-4">
-      <p>For swim instructors: Create and manage your lessons in one place.</p>
-      <p>For 'ohanas: Browse to find lessons that work for your keiki's schedule, age, and ability.</p>
+      <div class="row align-items-center pt-2">
+        <div class="col mh-100 d-inline-block p-5 m-1 text-bg-light rounded-3">
+          <h2>For Swim Instructors</h2>
+          <ul class="list-group">
+            <li class="list-group-item">Organize your swim lessons in one place.</li>
+            <li class="list-group-item">Send messages to your roster.</li>
+            <li class="list-group-item">Keep track of a waitlist.</li>
+          </ul>
+        </div>
+
+        <div class="col mh-100 d-inline-block p-5 m-1 text-bg-light rounded-3">
+          <h2>For Families</h2>
+          <ul class="list-group">
+            <li class="list-group-item">Find local swim lessons.</li>
+            <li class="list-group-item">Browse classes based on age, location, and schedule.</li>
+            <li class="list-group-item">Send messages to the instructor.</li>
+          </ul>
+        </div>
+      </div>
       <p class="lead">
         <a href="{% url 'register' %}" class="btn btn-primary mt-4 p-3">Create an Account</a>
       </p>
