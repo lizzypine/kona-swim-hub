@@ -205,11 +205,13 @@ def contactView(request):
     else:
         form = ContactForm(request.POST)
         if form.is_valid():
-            # from_email = form.cleaned_data['from_email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
+            email = form.cleaned_data['from_email']
+            html_template = 'emails/contact_site_admin.html'
+            html_message = render_to_string(html_template, {"subject": subject, "message_content": message, "email": email})
             try:
-                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [('lehuaweb@gmail.com')], fail_silently=False)
+                send_mail(subject, html_message, settings.DEFAULT_FROM_EMAIL, [('lehuaweb@gmail.com')], fail_silently=False)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return redirect('contact_thanks/')
