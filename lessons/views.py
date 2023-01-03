@@ -88,8 +88,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         subject = 'You signed up for swim lessons through Kona Swim Hub'
         html_template = 'emails/course_registration_success_email_family.html'
         html_message = render_to_string(html_template, {"user": user, "learner": learner, "course": course_title})
-        email_from = settings.DEFAULT_FROM_EMAIL
-        # email_from = 'Kona Swim Hub <team@konaswimhub.com>'
+        email_from = 'Kona Swim Hub <team@konaswimhub.com>'
         recipient_list = [(self.request.user.email)]
         send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
@@ -97,8 +96,8 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         html_template = 'emails/course_registration_success_email_instructor.html'
         html_message = render_to_string(html_template, {"instructor": instructor, "learner": learner, "course": course_title})
         subject = 'A student signed up for your course through Kona Swim Hub'
-        email_from = settings.DEFAULT_FROM_EMAIL
-        # email_from = 'Kona Swim Hub <team@konaswimhub.com>'
+
+        email_from = 'Kona Swim Hub <team@konaswimhub.com>'
         recipient_list = [(instance.course_instructor.email)]
         send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
@@ -173,7 +172,7 @@ class MoveWaitlistedToRoster(LoginRequiredMixin, UpdateView):
         subject = 'Kona Swim Hub | A swim instructor moved you off their waitlist!'
         html_template = 'emails/course_registration_success_email_family.html'
         html_message = render_to_string(html_template, {'user': user, 'learner': learner, 'course': course_title})
-        email_from = settings.DEFAULT_FROM_EMAIL
+        email_from = 'Kona Swim Hub <team@konaswimhub.com>'
         recipient_list = [(self.request.user.email)]
         send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 
@@ -181,7 +180,7 @@ class MoveWaitlistedToRoster(LoginRequiredMixin, UpdateView):
         html_template = 'emails/course_registration_success_email_instructor.html'
         html_message = render_to_string(html_template, {'instructor': instructor, 'learner': learner, 'course': course_title})
         subject = 'Kona Swim Hub | You successfully moved a student from the waitlist to the roster'
-        email_from = settings.DEFAULT_FROM_EMAIL
+        email_from = 'Kona Swim Hub <team@konaswimhub.com>'
         recipient_list = [(instance.course_instructor.email)]
         send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
 

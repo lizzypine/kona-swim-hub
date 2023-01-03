@@ -31,7 +31,7 @@ def user_register(request):
             html_template = 'registration/register_success_email.html'
             html_message = render_to_string(html_template, context=mydict)
             subject = 'You created an account with Kona Swim Hub'
-            email_from = settings.DEFAULT_FROM_EMAIL
+            email_from = 'Kona Swim Hub <team@konaswimhub.com>'
             recipient_list = [email]
             message = EmailMessage(
                 subject, 
@@ -181,7 +181,7 @@ def learner_delete(request, id):
                 html_template = 'emails/course_registration_learner_dropped.html'
                 html_message = render_to_string(html_template, {'instructor': roster.course_instructor.first_name, 'learner': learner, 'course': roster.course_title})
                 subject = 'Kona Swim Hub | A learner dropped out of your course'
-                email_from = settings.DEFAULT_FROM_EMAIL
+                email_from = 'Kona Swim Hub <team@konaswimhub.com>'
                 recipient_list = [(roster.course_instructor.email)]
                 send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
             # else, just add a spot back to the course.
@@ -268,13 +268,13 @@ def contact_learners(request, pk):
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             html_message = render_to_string(html_template, {"user": parent_name, "instructor": course.course_instructor, "course": course.course_title, "message_content": message})
-            from_email = settings.DEFAULT_FROM_EMAIL
-            to_email = [settings.DEFAULT_FROM_EMAIL]
+            email_from = 'Kona Swim Hub <team@konaswimhub.com>'
+            email_to = [settings.DEFAULT_FROM_EMAIL]
             message = EmailMessage(
                 subject, 
                 html_message, 
-                from_email, 
-                to_email,
+                email_from, 
+                email_to,
                 bcc_recipient_list)
             message.fail_silently = False
             try:
