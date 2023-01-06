@@ -3,7 +3,6 @@ from accounts.views import SignUpView, LearnerDetailView, RegisterThanksPageView
 from accounts import views
 
 urlpatterns = [
-    # path('register/', views.user_register, name='register'),
     path('register/', SignUpView.as_view(), name='register'),
     path('register_thanks/', RegisterThanksPageView.as_view(), name='register_thanks'),
     path('learner-add/', views.learner_add, name='learner-add'),
