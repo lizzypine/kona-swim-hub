@@ -1,9 +1,10 @@
 from django.urls import path
-from accounts.views import LearnerDetailView, RegisterThanksPageView, contactView, ContactThanksPageView, ContactInstructorThanks
+from accounts.views import SignUpView, LearnerDetailView, RegisterThanksPageView, contactView, ContactThanksPageView, ContactInstructorThanks
 from accounts import views
 
 urlpatterns = [
-    path('register/', views.user_register, name='register'),
+    # path('register/', views.user_register, name='register'),
+    path('register/', SignUpView.as_view(), name='register'),
     path('register_thanks/', RegisterThanksPageView.as_view(), name='register_thanks'),
     path('learner-add/', views.learner_add, name='learner-add'),
     path('learner-detail/<int:pk>', LearnerDetailView.as_view(), name='learner-detail'),

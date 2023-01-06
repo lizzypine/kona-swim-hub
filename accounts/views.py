@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic import DetailView, DeleteView, TemplateView
+from django.views.generic import CreateView, DetailView, DeleteView, TemplateView
 from accounts.models import CustomUser, Learner
 from lessons.models import Course
 from accounts.forms import CustomUserCreationForm, LearnerAddForm, ContactForm, ContactInstructorForm, ContactLearnersForm, ContactWaitlistForm
@@ -14,39 +15,47 @@ from django.core.mail import EmailMessage
 from django.core.mail import send_mail, BadHeaderError
 import django.dispatch
 
-def user_register(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        email = request.POST['email']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
+class SignUpView(CreateView):
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/register.html'
 
-        if CustomUser.objects.filter(email=email).exists():
-            messages.info(request, 'An account with this email already exists.')
-        else:
-            user = CustomUser.objects.create_user(
-                username=email, email=email, first_name=first_name, last_name=last_name)
-            mydict = {'email': email}
-            user.save()
-            html_template = 'registration/register_success_email.html'
-            html_message = render_to_string(html_template, context=mydict)
-            subject = 'You created an account with Kona Swim Hub'
-            email_from = settings.DEFAULT_FROM_EMAIL
-            recipient_list = [email]
-            message = EmailMessage(
-                subject, 
-                html_message, 
-                email_from, 
-                recipient_list)
-            message.content_subtype = 'html'
-            message.fail_silently = False
-            message.send()
-            return HttpResponseRedirect('../register_thanks')
+# def user_register(request):
+#     if request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST)
+#         email = request.POST['email']
+#         # first_name = request.POST['first_name']
+#         # last_name = request.POST['last_name']
+
+#         if CustomUser.objects.filter(email=email).exists():
+#             messages.info(request, 'An account with this email already exists.')
+
+#         if form.is_valid():
+#             user 
+#         else:
+#             user = CustomUser.objects.create_user(
+#                 username=email, email=email, first_name=first_name, last_name=last_name)
+#             mydict = {'email': email}
+#             user.save()
+#             html_template = 'registration/register_success_email.html'
+#             html_message = render_to_string(html_template, context=mydict)
+#             subject = 'You created an account with Kona Swim Hub'
+#             email_from = settings.DEFAULT_FROM_EMAIL
+#             recipient_list = [email]
+#             message = EmailMessage(
+#                 subject, 
+#                 html_message, 
+#                 email_from, 
+#                 recipient_list)
+#             message.content_subtype = 'html'
+#             message.fail_silently = False
+#             message.send()
+#             return HttpResponseRedirect('../register_thanks')
     
-    else:
-        form = CustomUserCreationForm() 
+#     else:
+#         form = CustomUserCreationForm() 
     
-    return TemplateResponse(request, 'registration/register.html', {'form': form})
+#     return TemplateResponse(request, 'registration/register.html', {'form': form})
 
 class RegisterThanksPageView(TemplateView):
     template_name = 'registration/register_thanks.html'
@@ -55,15 +64,6 @@ class ProfileUpdateView(LoginRequiredMixin, DetailView):
     model = Learner
     template_name = 'course_detail.html'
     context_object_name = 'course'
-
-# class UserPageView(LoginRequiredMixin, ListView):
-#     template_name = 'users.html'
-#     model = CustomUser
-
-# class UserChangeView(LoginRequiredMixin, CreateView):
-#     form_class = CustomUserChangeForm
-#     success_url = reverse_lazy('profile')
-#     template_name = 'profile.html'
 
 # My Account Page
 @login_required
