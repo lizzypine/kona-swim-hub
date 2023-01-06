@@ -16,9 +16,6 @@ SECRET_KEY = env.str('SECRET_KEY')
 
 ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1', '.konaswimhub.com']
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
-
 # Application definition
 INSTALLED_APPS = [
     'lessons.apps.LessonsConfig',
