@@ -20,42 +20,21 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/register.html'
 
-# def user_register(request):
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)
-#         email = request.POST['email']
-#         # first_name = request.POST['first_name']
-#         # last_name = request.POST['last_name']
-
-#         if CustomUser.objects.filter(email=email).exists():
-#             messages.info(request, 'An account with this email already exists.')
-
-#         if form.is_valid():
-#             user 
-#         else:
-#             user = CustomUser.objects.create_user(
-#                 username=email, email=email, first_name=first_name, last_name=last_name)
-#             mydict = {'email': email}
-#             user.save()
-#             html_template = 'registration/register_success_email.html'
-#             html_message = render_to_string(html_template, context=mydict)
-#             subject = 'You created an account with Kona Swim Hub'
-#             email_from = settings.DEFAULT_FROM_EMAIL
-#             recipient_list = [email]
-#             message = EmailMessage(
-#                 subject, 
-#                 html_message, 
-#                 email_from, 
-#                 recipient_list)
-#             message.content_subtype = 'html'
-#             message.fail_silently = False
-#             message.send()
-#             return HttpResponseRedirect('../register_thanks')
-    
-#     else:
-#         form = CustomUserCreationForm() 
-    
-#     return TemplateResponse(request, 'registration/register.html', {'form': form})
+# def send_registration_success_email:
+#     mydict = {'email': email}
+#     html_template = 'registration/register_success_email.html'
+#     html_message = render_to_string(html_template, context=mydict)
+#     subject = 'You created an account with Kona Swim Hub'
+#     email_from = settings.DEFAULT_FROM_EMAIL
+#     recipient_list = [email]
+#     message = EmailMessage(
+#         subject, 
+#         html_message, 
+#         email_from, 
+#         recipient_list)
+#     message.content_subtype = 'html'
+#     message.fail_silently = False
+#     message.send()
 
 class RegisterThanksPageView(TemplateView):
     template_name = 'registration/register_thanks.html'

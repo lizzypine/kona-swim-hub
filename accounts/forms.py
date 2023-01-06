@@ -6,13 +6,14 @@ from accounts.models import CustomUser
 from lessons.models import Learner
 
 class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = CustomUser
-        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'is_instructor',)
 
     is_instructor = forms.BooleanField(
         label=('Check if would you like to register as a swim instructor.'),
     )
+
+    class Meta:
+        model = CustomUser
+        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'is_instructor',)
     
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
