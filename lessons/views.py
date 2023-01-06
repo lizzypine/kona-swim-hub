@@ -208,7 +208,7 @@ def course_update(request, pk):
 class CourseDeleteView(LoginRequiredMixin, DeleteView):
     model = Course
     template_name = 'course-delete.html'
-    success_url = '../accounts/my-account'
+    success_url = '../../accounts/my-account'
 
 class ThanksPageView(LoginRequiredMixin, TemplateView):
     template_name = 'thanks.html'
