@@ -1,30 +1,19 @@
 from django.test import TestCase
-from django.urls import reverse
 
-from lessons.lessons.models import User
+from .models import Course
+from accounts.models import Learner
 
-class UserTests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create(
-            email="test@gmail.com", password="secret", first_name="testuserfirst", last_name="testuserlast", is_instructor="false"
-        )
-
-    def test_model_content(self):
-        self.assertEqual(self.user.email, "test@email.com")
-
-    def test_url_exists_at_correct_location(self):
-        response = self.client.get("/")
-        self.assertEqual(response.status_code,200)
-
-    def test_url_available_by_name(self):
-        response = self.client.get(reverse("home"))
-        self.assertEqual(response.status_code, 200)
-
-    def test_template_name_correct(self):
-        response = self.client.get(reverse("home"))
-        self.assertTemplateUsed(response, "home.html")
-
-    def test_template_content(self):
-        response = self.client.get(reverse("home"))
-        self.assertContains(response, "<h1>Homepage</h1>")
+class TestModels(TestCase):
+    def test_course_has_learners(self):
+        course = Course.objects.create(course_title="Test Course")
+        bob = Learner.objects.create(first_name="Bob", last_name="Boy", birthday="2000-01-01")
+        jane = Learner.objects.create(first_name="Jane", last_name="Girl", birthday="2001-01-01")
+        course.learner_on_roster.set([bob.pk, jane.pk])
+        self.assertEqual(course.learner_on_roster.count(), 2)
+    
+    def test_course_has_waitlist(self):
+        course = Course.objects.create(course_title="Test Course Full")
+        kekoa = Learner.objects.create(first_name="Kekoa", last_name="Boy", birthday="2000-01-01")
+        maile = Learner.objects.create(first_name="Maile", last_name="Girl", birthday="2001-01-01")
+        course.learner_on_waitlist.set([kekoa.pk, maile.pk])
+        self.assertEqual(course.learner_on_waitlist.count(), 2)

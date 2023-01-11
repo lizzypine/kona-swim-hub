@@ -6,7 +6,6 @@ from accounts.models import CustomUser
 from lessons.models import Learner
 
 class CustomUserCreationForm(UserCreationForm):
-
     is_instructor = forms.BooleanField(
         label=('Check if would you like to register as a swim instructor.'),
     )
