@@ -12,8 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-# SECRET_KEY = env.str('SECRET_KEY')
+# AWS EB
 SECRET_KEY = os.environ['SECRET_KEY']
+# SECRET_KEY = env.str('SECRET_KEY')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'kona-swim-hub-dev.us-west-1.elasticbeanstalk.com']
 
@@ -87,7 +88,9 @@ if 'RDS_DB_NAME' in os.environ:
         }
     }
 else:
-    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+    # AWS EB
+    DATABASES = {"default": {"DATABASE_URL": os.environ("DATABASE_URL")}}
+    # DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
