@@ -73,6 +73,7 @@ WSGI_APPLICATION = 'kona-swim-hub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# Check name of AWS db?
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
@@ -88,7 +89,7 @@ else:
     DATABASES = {
         'default': {
         env.dj_db_url('DATABASE_URL')
-    }
+        }
     }
 
 # DATABASES = {
