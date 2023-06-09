@@ -87,9 +87,9 @@ if 'RDS_DB_NAME' in os.environ:
             'DATABASE_URL': ""
         }
     }
-else:
+# else:
     # AWS EB
-    DATABASES = {"default": {"DATABASE_URL": os.environ("DATABASE_URL")}}
+    # DATABASES = {"default": {"DATABASE_URL": os.environ("DATABASE_URL")}}
     # DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 
 # Password validation
