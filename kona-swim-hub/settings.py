@@ -88,7 +88,7 @@ if 'RDS_DB_NAME' in os.environ:
 else:
     DATABASES = {
         'default': {
-        env.dj_db_url('DATABASE_URL')
+        # env.dj_db_url('DATABASE_URL')
         }
     }
 
