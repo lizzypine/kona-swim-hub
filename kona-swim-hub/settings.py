@@ -147,7 +147,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 USE_S3 = os.getenv('USE_S3') == 'TRUE'
 # SECRET_KEY = os.environ['SECRET_KEY']
-SECRET_KEY = os.getenv['SECRET_KEY']
+# SECRET_KEY = os.getenv['SECRET_KEY']
 
 # if USE_S3:
 #     # aws settings
