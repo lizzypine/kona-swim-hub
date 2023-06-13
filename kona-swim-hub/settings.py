@@ -16,7 +16,7 @@ DEBUG = env.bool('DEBUG', default=False)
 # SECRET_KEY = os.environ['SECRET_KEY']
 SECRET_KEY = env.str('SECRET_KEY')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'ksh-dev.us-west-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'ksh-dev.us-west-1.elasticbeanstalk.com', '*']
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURE_SSL_REDIRECT = True
