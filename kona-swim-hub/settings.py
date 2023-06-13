@@ -93,8 +93,20 @@ if 'RDS_DB_NAME' in os.environ:
         }
     }
 else:
-    DATABASES = {
-        "default": env.dj_db_url("DATABASE_URL")}
+   DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'kona-swim-hub',
+            'USER': os.environ['DATABASE_USER'],
+            'PASSWORD': os.environ['DATABASE_PASSWORD'],
+            'HOST': 'localhost',
+            'PORT': '8000',
+        }
+    }
+   
+    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
