@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = env.bool('DEBUG', default=False)
 
 # AWS EB
-SECRET_KEY = os.environ['SECRET_KEY']
+# SECRET_KEY = os.environ['SECRET_KEY']
 # SECRET_KEY = env.str('SECRET_KEY')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'ksh-dev.us-west-1.elasticbeanstalk.com']
@@ -130,6 +130,8 @@ if USE_S3:
     # aws settings
     # AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    # SECRET_KEY = os.environ['SECRET_KEY']
+    SECRET_KEY = os.getenv['SECRET_KEY']
     # AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
     # AWS_S3_BUCKET_NAME_STATIC = AWS_STORAGE_BUCKET_NAME
     AWS_DEFAULT_ACL = 'public-read'
