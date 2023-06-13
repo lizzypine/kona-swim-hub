@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get('DJANGO_DEBUG', '1').lower() in ['true', 't', '1']
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'ksh-dev.us-west-1.elasticbeanstalk.com', '172.31.27.194']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'ksh-dev.us-west-1.elasticbeanstalk.com', '172.31.27.194q']
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURE_SSL_REDIRECT = True
