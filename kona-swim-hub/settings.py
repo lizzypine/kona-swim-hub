@@ -127,6 +127,11 @@ USE_TZ = True
 # STATIC_URL = '/static/'
 # STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # STATIC_URL = '/staticfiles/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -163,7 +168,7 @@ if 'AWS_STORAGE_BUCKET_NAME' in os.environ:
     AWS_S3_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_S3_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'))
+
 
 # if DEBUG:
 #     STATICFILES_DIRS = [
