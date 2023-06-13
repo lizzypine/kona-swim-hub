@@ -92,6 +92,7 @@ if 'RDS_DB_NAME' in os.environ:
             'PORT': os.environ['RDS_PORT'],
         }
     }
+
 # else:
 #    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}    
 #    DATABASES = {
