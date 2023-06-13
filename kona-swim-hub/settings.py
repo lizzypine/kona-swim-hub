@@ -129,24 +129,24 @@ STATIC_ROOT = 'static'
 
 USE_S3 = os.getenv('USE_S3') == 'TRUE'
 
-if USE_S3:
-    # aws settings
-    # AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    # SECRET_KEY = os.environ['SECRET_KEY']
-    # SECRET_KEY = os.getenv['SECRET_KEY']
-    # AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-    # AWS_S3_BUCKET_NAME_STATIC = AWS_STORAGE_BUCKET_NAME
-    AWS_DEFAULT_ACL = 'public-read'
-    # AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-    # STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
-    AWS_LOCATION = 'static'
-    # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    # STATICFILES_STORAGE = 'django_s3_storage.storage.StaticS3Storage'
-else:
-    STATIC_URL = '/staticfiles/'
+# if USE_S3:
+#     # aws settings
+#     # AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+#     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+#     # SECRET_KEY = os.environ['SECRET_KEY']
+#     # SECRET_KEY = os.getenv['SECRET_KEY']
+#     # AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+#     # AWS_S3_BUCKET_NAME_STATIC = AWS_STORAGE_BUCKET_NAME
+#     AWS_DEFAULT_ACL = 'public-read'
+#     # AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+#     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+#     # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+#     # STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+#     AWS_LOCATION = 'static'
+#     # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+#     # STATICFILES_STORAGE = 'django_s3_storage.storage.StaticS3Storage'
+# else:
+    # STATIC_URL = '/staticfiles/'
     # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 if 'AWS_STORAGE_BUCKET_NAME' in os.environ:
@@ -161,12 +161,12 @@ if 'AWS_STORAGE_BUCKET_NAME' in os.environ:
 
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'))
 
-if DEBUG:
-    STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    ]
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+# if DEBUG:
+#     STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+#     ]
+# else:
+#     STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
