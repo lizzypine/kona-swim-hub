@@ -92,7 +92,8 @@ if 'RDS_DB_NAME' in os.environ:
             'PORT': os.environ['RDS_PORT'],
         }
     }
-else:
+# else:
+#    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}    
 #    DATABASES = {
 #         'default': {
 #             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -104,7 +105,7 @@ else:
 #         }
 #     }
    
-    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+    
 
 
 
