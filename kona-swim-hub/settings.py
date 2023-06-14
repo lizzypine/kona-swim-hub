@@ -23,7 +23,6 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     ".konaswimhub.com",
     "ksh-dev.us-west-1.elasticbeanstalk.com",
-    "*",
 ]
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
