@@ -35,7 +35,8 @@ SECRET_KEY = os.environ.get(
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    ".konaswimhub.com",
+    # ".konaswimhub.com",
+    "konaswimhub.com",
     "ksh-dev.us-west-1.elasticbeanstalk.com",
     "Ksh-prod.eba-p22pcum8.us-west-1.elasticbeanstalk.com",
 ]
