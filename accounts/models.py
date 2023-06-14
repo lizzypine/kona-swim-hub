@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=200)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    is_instructor = models.BooleanField(default=False, blank=True)
+    is_instructor = models.BooleanField(default=False, blank=True, null=True)
     course_created = models.ForeignKey(
         "lessons.Course", null=True, on_delete=models.CASCADE
     )
