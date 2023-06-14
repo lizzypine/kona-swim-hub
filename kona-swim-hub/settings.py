@@ -11,13 +11,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+DEBUG = os.environ.get("DJANGO_DEBUG", "1").lower() in ["true", "t", "1"]
 
 # AWS EB
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
 )
-
-DEBUG = os.environ.get("DJANGO_DEBUG", "1").lower() in ["true", "t", "1"]
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -99,15 +98,15 @@ if "RDS_DB_NAME" in os.environ:
         }
     }
 
-else:
-    # DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+# else:
+#     # DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-        }
-    }
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
