@@ -13,8 +13,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = env.bool('DEBUG', default=False)
 
 # AWS EB
-# SECRET_KEY = os.environ['SECRET_KEY']
-# SECRET_KEY = env.str('SECRET_KEY')
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
 )
@@ -86,21 +84,17 @@ WSGI_APPLICATION = 'kona-swim-hub.wsgi.application'
 if 'RDS_HOSTNAME' in os.environ:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': os.environ['RDS_DB_NAME'],
             'USER': os.environ['RDS_USERNAME'],
             'PASSWORD': os.environ['RDS_PASSWORD'],
             'HOST': os.environ['RDS_HOSTNAME'],
             'PORT': os.environ['RDS_PORT'],
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
         }
     }
 
-# else:
-#     DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
-
-    #    env.dj_db_url("DATABASE_URL")}    
-
-
+else:
+    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}  
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
