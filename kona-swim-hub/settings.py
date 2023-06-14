@@ -24,6 +24,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     ".konaswimhub.com",
     "ksh-dev.us-west-1.elasticbeanstalk.com",
+    "*",
 ]
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -144,9 +145,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
-
-# Remove?
-# USE_S3 = os.getenv("USE_S3") == "TRUE"
 
 if "AWS_STORAGE_BUCKET_NAME" in os.environ:
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
