@@ -2,9 +2,31 @@ from pathlib import Path
 from environs import Env
 from decouple import config
 import os
+import subprocess
+import ast
 
 env = Env()
 env.read_env()
+
+
+def get_environ_vars():
+    completed_process = subprocess.run(
+        ["/opt/elasticbeanstalk/bin/get-config", "environment"],
+        stdout=subprocess.PIPE,
+        text=True,
+        check=True,
+    )
+
+    return ast.literal_eval(completed_process.stdout)
+
+
+# from pathlib import Path
+# from environs import Env
+# from decouple import config
+# import os
+
+# env = Env()
+# env.read_env()
 
 # Set the project base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,12 +106,10 @@ WSGI_APPLICATION = "kona-swim-hub.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-
-if "RDS_DB_NAME" in os.environ:
-    # if "RDS_HOSTNAME" in os.environ:
+if "RDS_HOSTNAME" in os.environ:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "    ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": os.environ["RDS_DB_NAME"],
             "USER": os.environ["RDS_USERNAME"],
             "PASSWORD": os.environ["RDS_PASSWORD"],
@@ -97,6 +117,31 @@ if "RDS_DB_NAME" in os.environ:
             "PORT": os.environ["RDS_PORT"],
         }
     }
+else:
+    env_vars = get_environ_vars()
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": env_vars["RDS_DB_NAME"],
+            "USER": env_vars["RDS_USERNAME"],
+            "PASSWORD": env_vars["RDS_PASSWORD"],
+            "HOST": env_vars["RDS_HOSTNAME"],
+            "PORT": env_vars["RDS_PORT"],
+        }
+    }
+
+# if "RDS_DB_NAME" in os.environ:
+#     # if "RDS_HOSTNAME" in os.environ:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql_psycopg2",
+#             "NAME": os.environ["RDS_DB_NAME"],
+#             "USER": os.environ["RDS_USERNAME"],
+#             "PASSWORD": os.environ["RDS_PASSWORD"],
+#             "HOST": os.environ["RDS_HOSTNAME"],
+#             "PORT": os.environ["RDS_PORT"],
+#         }
+#     }
 
 # else:
 #     # DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
