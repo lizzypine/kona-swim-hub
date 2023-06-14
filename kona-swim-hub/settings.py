@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get('DJANGO_DEBUG', '1').lower() in ['true', 't', '1']
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'ksh-dev.us-west-1.elasticbeanstalk.com', '172.31.27.194q']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.konaswimhub.com', 'ksh-dev.us-west-1.elasticbeanstalk.com']
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURE_SSL_REDIRECT = True
@@ -86,7 +86,8 @@ WSGI_APPLICATION = 'kona-swim-hub.wsgi.application'
 if 'RDS_HOSTNAME' in os.environ:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.mysql',
             'NAME': os.environ['RDS_DB_NAME'],
             'USER': os.environ['RDS_USERNAME'],
             'PASSWORD': os.environ['RDS_PASSWORD'],
