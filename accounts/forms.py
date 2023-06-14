@@ -9,16 +9,18 @@ from lessons.models import Learner
 class CustomUserCreationForm(UserCreationForm):
     is_instructor = forms.BooleanField(
         label=("Check if would you like to register as a swim instructor."),
+        required=False,
     )
 
     class Meta:
         model = CustomUser
-        fields = UserCreationForm.Meta.fields + (
-            "first_name",
-            "last_name",
-            "email",
-            "is_instructor",
-        )
+        fields = UserChangeForm.Meta.fields
+        # fields = UserCreationForm.Meta.fields + (
+        #     "first_name",
+        #     "last_name",
+        #     "email",
+        #     "is_instructor",
+        # )
 
 
 class CustomUserChangeForm(UserChangeForm):
