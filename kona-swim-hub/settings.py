@@ -121,7 +121,7 @@ if "RDS_HOSTNAME" in os.environ:
 
 # Local database
 # else:
-DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+# DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 
 #     DATABASES = {
 #         "default": {
