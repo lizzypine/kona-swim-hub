@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
-DEBUG = os.environ.get("DJANGO_DEBUG", "1").lower() in ["true", "t", "1"]
+# DEBUG = os.environ.get("DJANGO_DEBUG", "1").lower() in ["true", "t", "1"]
 
 # AWS EB
 SECRET_KEY = os.environ.get(
@@ -127,7 +127,7 @@ else:
 
 # Local database
 # else:
-#     # DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+# DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 
 #     DATABASES = {
 #         "default": {
