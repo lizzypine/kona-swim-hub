@@ -38,9 +38,6 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     ".konaswimhub.com",
     "konaswimhub.com",
-    "ksh-dev.us-west-1.elasticbeanstalk.com",
-    "Ksh-prod.eba-p22pcum8.us-west-1.elasticbeanstalk.com",
-    "kona-swim-hub-prod.us-west-1.elasticbeanstalk.com",
     "kona-swim-hub-prod2.us-west-1.elasticbeanstalk.com",
 ]
 
