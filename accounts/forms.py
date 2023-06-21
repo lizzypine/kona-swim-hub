@@ -33,7 +33,7 @@ class LearnerAddForm(ModelForm):
         model = Learner
         fields = ["birthday", "first_name", "last_name"]
         exclude = ["enrolled_in_course", "learner_on_waitlist", "associated_with_user"]
-        widgets = {"birthday": DatePickerInput()}
+        widgets = {"birthday": DatePickerInput(options={"format": "MM/DD/YYYY"})}
 
 
 class ContactForm(forms.Form):
