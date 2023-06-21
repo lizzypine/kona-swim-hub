@@ -106,29 +106,10 @@ if "RDS_HOSTNAME" in os.environ:
             "PORT": os.environ["RDS_PORT"],
         }
     }
-# else:
-#     env_vars = get_environ_vars()
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql_psycopg2",
-#             "NAME": env_vars["RDS_DB_NAME"],
-#             "USER": env_vars["RDS_USERNAME"],
-#             "PASSWORD": env_vars["RDS_PASSWORD"],
-#             "HOST": env_vars["RDS_HOSTNAME"],
-#             "PORT": env_vars["RDS_PORT"],
-#         }
-#     }
 
 # Local database
 else:
     DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
-
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-#         }
-#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
