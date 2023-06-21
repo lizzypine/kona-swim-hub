@@ -32,7 +32,7 @@ def register(request):
 
             # Send confirmation email
             subject = "Welcome to Kona Swim Hub!"
-            html_template = "emails/registration/register_success_email.html"
+            html_template = "emails/register_success_email.html"
             html_message = render_to_string(
                 html_template,
             )
@@ -41,7 +41,7 @@ def register(request):
             send_mail(
                 subject, html_message, email_from, recipient_list, fail_silently=False
             )
-            return redirect("homepage")
+            return redirect("register_thanks")
 
         else:
             for error in list(form.errors.values()):
@@ -55,45 +55,6 @@ def register(request):
         template_name="registration/register.html",
         context={"form": form},
     )
-
-
-# class SignUpView(CreateView):
-#     form_class = CustomUserCreationForm
-#     success_url = reverse_lazy("login")
-#     template_name = "registration/register.html"
-
-#     if form.is_valid():
-#         # For each learner object, get the associated_with_user, then get the email of the parent user.
-#         recipient_list = form.cleaned_data["recipient_list"]
-#         recipient_list_as_list = list(recipient_list.all())
-
-#     # Send a confirmation email to user
-#     html_template = "emails/registration/register_success_email.html"
-#     html_message = render_to_string(
-#         html_template,
-#     )
-#     subject = "Welcome to Kona Swim Hub!"
-#     # email_from = settings.DEFAULT_FROM_EMAIL
-#     email_from = "Kona Swim Hub <team@konaswimhub.com>"
-#     recipient_list = [(self.request.user.email)]
-#     send_mail(subject, html_message, email_from, recipient_list, fail_silently=False)
-
-
-# def send_registration_success_email:
-#     mydict = {'email': email}
-#     html_template = 'registration/register_success_email.html'
-#     html_message = render_to_string(html_template, context=mydict)
-#     subject = 'You created an account with Kona Swim Hub'
-#     email_from = settings.DEFAULT_FROM_EMAIL
-#     recipient_list = [email]
-#     message = EmailMessage(
-#         subject,
-#         html_message,
-#         email_from,
-#         recipient_list)
-#     message.content_subtype = 'html'
-#     message.fail_silently = False
-#     message.send()
 
 
 class RegisterThanksPageView(TemplateView):
