@@ -25,8 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-# DEBUG = env.bool("DEBUG", default=False)
-# DEBUG = os.environ.get("DJANGO_DEBUG", "1").lower() in ["true", "t", "1"]
+DEBUG = env.bool("DEBUG", default=False)
 
 # AWS EB
 SECRET_KEY = os.environ.get(
@@ -40,9 +39,6 @@ ALLOWED_HOSTS = [
     "konaswimhub.com",
     "kona-swim-hub-prod2.us-west-1.elasticbeanstalk.com",
 ]
-
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
 
 # Application definition
 INSTALLED_APPS = [
@@ -110,22 +106,22 @@ if "RDS_HOSTNAME" in os.environ:
             "PORT": os.environ["RDS_PORT"],
         }
     }
-else:
-    env_vars = get_environ_vars()
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": env_vars["RDS_DB_NAME"],
-            "USER": env_vars["RDS_USERNAME"],
-            "PASSWORD": env_vars["RDS_PASSWORD"],
-            "HOST": env_vars["RDS_HOSTNAME"],
-            "PORT": env_vars["RDS_PORT"],
-        }
-    }
+# else:
+#     env_vars = get_environ_vars()
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql_psycopg2",
+#             "NAME": env_vars["RDS_DB_NAME"],
+#             "USER": env_vars["RDS_USERNAME"],
+#             "PASSWORD": env_vars["RDS_PASSWORD"],
+#             "HOST": env_vars["RDS_HOSTNAME"],
+#             "PORT": env_vars["RDS_PORT"],
+#         }
+#     }
 
 # Local database
 # else:
-# DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 
 #     DATABASES = {
 #         "default": {

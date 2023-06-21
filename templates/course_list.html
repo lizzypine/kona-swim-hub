@@ -13,6 +13,11 @@
   <div class="container">
     <h1>Upcoming Courses</h1>
 
+    {% if not request.user.is_instructor %}
+
+    <h3>There are no courses.</h3>
+
+    {% else %}
 
     <div class="course-table-container">
 
@@ -50,6 +55,7 @@
     <div>
       <a href=" {% url 'course_create' %}" class="btn btn-primary" role="button">Create a Course</a>
     </div>
+    {% endif %}
     {% endif %}
   </div>
 </body>
