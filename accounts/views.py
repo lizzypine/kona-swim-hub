@@ -50,6 +50,10 @@ def register(request):
     else:
         form = CustomUserCreationForm()
 
+        for field in form.fields.values():
+            field.widget.attrs['readonly'] = True
+            field.widget.attrs['disabled'] = True
+
     return render(
         request=request,
         template_name="registration/register.html",
