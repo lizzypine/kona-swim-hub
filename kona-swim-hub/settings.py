@@ -27,6 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = False
 DEBUG = env.bool("DEBUG", default=False)
 
+TURNSTILE_SITEKEY = os.getenv("TURNSTILE_SITEKEY") or (
+    "1x00000000000000000000AA" if DEBUG else ""
+)
+TURNSTILE_SECRET = os.getenv("TURNSTILE_SECRET") or (
+    "1x0000000000000000000000000000000AA" if DEBUG else ""
+)
+
 # AWS EB
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
@@ -52,7 +59,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
-    "bootstrap5",
+    "django_bootstrap5",
+    "turnstile",
     "bootstrap_datepicker_plus",
     "django.forms",
     "crispy_forms",
@@ -175,12 +183,18 @@ AUTH_PROFILE_MODULE = "accounts.UserProfile"
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_API_KEY")
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend"
+    if DEBUG
+    else "django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
 CONTACT_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"
 DEFAULT_FROM_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"

@@ -1,18 +1,13 @@
-{% extends "base.html" %}
-{% load bootstrap5 %}
-
-{% block title %}Create a Course | Kona Swim Hub{% endblock title%}
-
-{% block content %}
+{% extends "base.html" %} {% load django_bootstrap5 %} {% block title %}Create a
+Course | Kona Swim Hub{% endblock title%} {% block content %}
 <script src="//code.jquery.com/jquery.min.js"></script>
 {{ form.media }}
 
 <div class="container">
   <h1>Create a Course</h1>
   <form action="/lessons/course_create/" method="post">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <input type="submit" class="btn btn-success" value="Submit">
+    {% csrf_token %} {% bootstrap_form form %}
+    <input type="submit" class="btn btn-success" value="Submit" />
   </form>
 </div>
 

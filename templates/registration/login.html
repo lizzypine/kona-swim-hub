@@ -1,17 +1,14 @@
-{% extends "base.html" %}
-{% load bootstrap5 %}
-
-{% block title %}Log In | Kona Swim Hub{% endblock title%}
-
-{% block content %}
+{% extends "base.html" %} {% load django_bootstrap5 %} {% block title %}Log In |
+Kona Swim Hub{% endblock title%} {% block content %}
 
 <div class="container">
-    <h1>Log In</h1>
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button type="submit" class="btn btn-success">Log In</button>
-        <a href="{% url 'password_reset' %}" class="btn btn-outline-primary me-2">Forgot Password?</a>
-    </form>
+  <h1>Log In</h1>
+  <form method="post">
+    {% csrf_token %} {% bootstrap_form form %}
+    <button type="submit" class="btn btn-success">Log In</button>
+    <a href="{% url 'password_reset' %}" class="btn btn-outline-primary me-2"
+      >Forgot Password?</a
+    >
+  </form>
 </div>
 {% endblock content %}

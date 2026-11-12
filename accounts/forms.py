@@ -1,9 +1,27 @@
+import logging
+
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 from django.forms import ModelForm
 from accounts.models import CustomUser
 from lessons.models import Learner
+from turnstile.fields import TurnstileField
+
+
+logger = logging.getLogger(__name__)
+
+
+class ResilientTurnstileField(TurnstileField):
+    def validate(self, value):
+        try:
+            super().validate(value)
+        except (OSError, ValueError) as exc:
+            logger.exception("Turnstile verification request failed")
+            raise forms.ValidationError(
+                "Anti-spam verification is temporarily unavailable. Please try again.",
+                code="turnstile_unavailable",
+            ) from exc
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -40,6 +58,7 @@ class ContactForm(forms.Form):
     from_email = forms.EmailField(max_length=50, required=True)
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(widget=forms.Textarea, max_length=2000, required=True)
+    turnstile = ResilientTurnstileField()
 
 
 class ContactInstructorForm(forms.Form):
