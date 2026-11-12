@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     "django.forms",
     "crispy_forms",
-    "storages",
 ]
 
 MIDDLEWARE = [
