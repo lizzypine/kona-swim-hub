@@ -9,6 +9,22 @@ env = Env()
 env.read_env()
 
 
+def split_csv(value):
+    return [item.strip() for item in (value or "").split(",") if item.strip()]
+
+
+def parse_proxy_header(value):
+    if not value:
+        return ("HTTP_X_FORWARDED_PROTO", "https")
+    if isinstance(value, tuple) and len(value) == 2:
+        return value
+    if isinstance(value, str):
+        header, sep, scheme = value.partition(":")
+        if sep:
+            return (header, scheme)
+    return ("HTTP_X_FORWARDED_PROTO", "https")
+
+
 def get_environ_vars():
     completed_process = subprocess.run(
         ["/opt/elasticbeanstalk/bin/get-config", "environment"],
@@ -46,21 +62,19 @@ ALLOWED_HOSTS = [
     "konaswimhub.com",
     "kona-swim-hub-prod2.us-west-1.elasticbeanstalk.com",
 ]
-ALLOWED_HOSTS.extend(
-    host.strip()
-    for host in os.getenv("ALLOWED_HOSTS_EXTRA", "").split(",")
-    if host.strip()
-)
+ALLOWED_HOSTS.extend(split_csv(os.getenv("ALLOWED_HOSTS", "")))
+ALLOWED_HOSTS.extend(split_csv(os.getenv("ALLOWED_HOSTS_EXTRA", "")))
+ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
+
 CSRF_TRUSTED_ORIGINS = [
     "https://konaswimhub.com",
     "https://www.konaswimhub.com",
-    *[
-        origin.strip()
-        for origin in os.getenv("CSRF_TRUSTED_ORIGINS_EXTRA", "").split(",")
-        if origin.strip()
-    ],
+    *split_csv(os.getenv("CSRF_TRUSTED_ORIGINS", "")),
+    *split_csv(os.getenv("CSRF_TRUSTED_ORIGINS_EXTRA", "")),
 ]
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(CSRF_TRUSTED_ORIGINS))
+
+SECURE_PROXY_SSL_HEADER = parse_proxy_header(os.getenv("SECURE_PROXY_SSL_HEADER"))
 
 # Application definition
 INSTALLED_APPS = [

@@ -2,6 +2,9 @@ venv
 .venv
 .env
 .env.docker
+infra/.venv/
+infra/cdk.out/
+infra/cdk.context.json
 __pycache__/
 db.sqlite3
 .DS_Store
