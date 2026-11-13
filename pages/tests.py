@@ -28,3 +28,10 @@ class AboutPageTests(SimpleTestCase):
         response = self.client.get(reverse("about"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "about.html")
+
+
+class HealthCheckTests(SimpleTestCase):
+    def test_health_check_is_database_independent(self):
+        response = self.client.get(reverse("health_check"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"ok")

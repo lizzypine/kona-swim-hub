@@ -46,6 +46,21 @@ ALLOWED_HOSTS = [
     "konaswimhub.com",
     "kona-swim-hub-prod2.us-west-1.elasticbeanstalk.com",
 ]
+ALLOWED_HOSTS.extend(
+    host.strip()
+    for host in os.getenv("ALLOWED_HOSTS_EXTRA", "").split(",")
+    if host.strip()
+)
+CSRF_TRUSTED_ORIGINS = [
+    "https://konaswimhub.com",
+    "https://www.konaswimhub.com",
+    *[
+        origin.strip()
+        for origin in os.getenv("CSRF_TRUSTED_ORIGINS_EXTRA", "").split(",")
+        if origin.strip()
+    ],
+]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 INSTALLED_APPS = [
@@ -163,7 +178,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
+STATIC_ROOT = os.getenv("STATIC_ROOT", os.path.join(BASE_DIR, "..", "www", "static"))
+STATIC_ROOT = os.getenv("STATIC_ROOT", os.path.join(BASE_DIR, "..", "www", "static"))
 
 if "AWS_STORAGE_BUCKET_NAME" in os.environ:
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
