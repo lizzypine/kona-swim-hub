@@ -102,7 +102,9 @@ WSGI_APPLICATION = "kona-swim-hub.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if "RDS_HOSTNAME" in os.environ:
+if env.str("DATABASE_URL", default=""):
+    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+elif "RDS_HOSTNAME" in os.environ:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -114,9 +116,17 @@ if "RDS_HOSTNAME" in os.environ:
         }
     }
 
-# Local database
 else:
     DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+
+default_database = DATABASES["default"]
+if "postgresql" in default_database["ENGINE"]:
+    default_database["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
+    default_database["CONN_HEALTH_CHECKS"] = True
+    default_database.setdefault("DISABLE_SERVER_SIDE_CURSORS", True)
+
+    if default_database.get("HOST", "").endswith(".neon.tech"):
+        default_database.setdefault("OPTIONS", {}).setdefault("sslmode", "require")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
