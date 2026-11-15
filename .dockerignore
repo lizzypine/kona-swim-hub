@@ -1,0 +1,14 @@
+.git
+.venv
+venv
+.env*
+**/.env*
+**/.venv
+**/venv
+__pycache__
+*.py[cod]
+*.sqlite3
+.DS_Store
+.pytest_cache
+staticfiles
+www/static

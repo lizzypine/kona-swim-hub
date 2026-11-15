@@ -9,6 +9,22 @@ env = Env()
 env.read_env()
 
 
+def split_csv(value):
+    return [item.strip() for item in (value or "").split(",") if item.strip()]
+
+
+def parse_proxy_header(value):
+    if not value:
+        return ("HTTP_X_FORWARDED_PROTO", "https")
+    if isinstance(value, tuple) and len(value) == 2:
+        return value
+    if isinstance(value, str):
+        header, sep, scheme = value.partition(":")
+        if sep:
+            return (header, scheme)
+    return ("HTTP_X_FORWARDED_PROTO", "https")
+
+
 def get_environ_vars():
     completed_process = subprocess.run(
         ["/opt/elasticbeanstalk/bin/get-config", "environment"],
@@ -42,10 +58,24 @@ SECRET_KEY = os.environ.get(
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "kona-swim-hub.service.local",
     ".konaswimhub.com",
     "konaswimhub.com",
     "kona-swim-hub-prod2.us-west-1.elasticbeanstalk.com",
 ]
+ALLOWED_HOSTS.extend(split_csv(os.getenv("ALLOWED_HOSTS", "")))
+ALLOWED_HOSTS.extend(split_csv(os.getenv("ALLOWED_HOSTS_EXTRA", "")))
+ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://konaswimhub.com",
+    "https://www.konaswimhub.com",
+    *split_csv(os.getenv("CSRF_TRUSTED_ORIGINS", "")),
+    *split_csv(os.getenv("CSRF_TRUSTED_ORIGINS_EXTRA", "")),
+]
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(CSRF_TRUSTED_ORIGINS))
+
+SECURE_PROXY_SSL_HEADER = parse_proxy_header(os.getenv("SECURE_PROXY_SSL_HEADER"))
 
 # Application definition
 INSTALLED_APPS = [
@@ -67,6 +97,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "pages.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -163,7 +194,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
+STATIC_ROOT = os.getenv("STATIC_ROOT", os.path.join(BASE_DIR, "..", "www", "static"))
+STATIC_ROOT = os.getenv("STATIC_ROOT", os.path.join(BASE_DIR, "..", "www", "static"))
 
 if "AWS_STORAGE_BUCKET_NAME" in os.environ:
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
@@ -206,5 +238,7 @@ EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
-CONTACT_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"
-DEFAULT_FROM_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "team@konaswimhub.com")
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", "Kona Swim Hub <team@notifications.konaswimhub.com>"
+)

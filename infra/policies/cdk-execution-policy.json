@@ -1,0 +1,33 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ManageLightsailContainerServicesInUsWest2",
+      "Effect": "Allow",
+      "Action": "lightsail:*ContainerService*",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "us-west-2"
+        }
+      }
+    },
+    {
+      "Sid": "TagLightsailContainerServicesInUsWest2",
+      "Effect": "Allow",
+      "Action": ["lightsail:TagResource", "lightsail:UntagResource"],
+      "Resource": "arn:aws:lightsail:us-west-2:971852987284:ContainerService/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "us-west-2"
+        }
+      }
+    },
+    {
+      "Sid": "ReadCdkBootstrapVersion",
+      "Effect": "Allow",
+      "Action": ["ssm:GetParameter", "ssm:GetParameters"],
+      "Resource": "arn:aws:ssm:us-west-2:971852987284:parameter/cdk-bootstrap/hnb659fds/version"
+    }
+  ]
+}
