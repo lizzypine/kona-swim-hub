@@ -42,7 +42,7 @@ def register(request):
             html_message = render_to_string(
                 html_template,
             )
-            email_from = "Kona Swim Hub <team@konaswimhub.com>"
+            email_from = settings.DEFAULT_FROM_EMAIL
             recipient_list = [(form.cleaned_data.get("email"))]
             send_mail(
                 subject, html_message, email_from, recipient_list, fail_silently=False
@@ -291,7 +291,7 @@ def contactView(request):
                     subject,
                     html_message,
                     settings.DEFAULT_FROM_EMAIL,
-                    [(settings.DEFAULT_FROM_EMAIL)],
+                    [settings.CONTACT_EMAIL],
                     fail_silently=False,
                 )
             except BadHeaderError:
@@ -304,11 +304,11 @@ def contactView(request):
                     "We couldn't send your message right now. Please try again later.",
                 )
                 return render(request, "contact.html", {"form": form}, status=503)
-            return redirect("contact_thanks/")
+            return redirect("contact_thanks")
     return render(request, "contact.html", {"form": form})
 
 
-class ContactThanksPageView(LoginRequiredMixin, TemplateView):
+class ContactThanksPageView(TemplateView):
     template_name = "contact_thanks.html"
 
 
@@ -389,7 +389,7 @@ def contact_learners(request, pk):
                 },
             )
             email_from = settings.DEFAULT_FROM_EMAIL
-            email_to = [settings.DEFAULT_FROM_EMAIL]
+            email_to = [settings.CONTACT_EMAIL]
             message = EmailMessage(
                 subject, html_message, email_from, email_to, bcc_recipient_list
             )
@@ -441,7 +441,7 @@ def contact_waitlist(request, pk):
                 },
             )
             from_email = settings.DEFAULT_FROM_EMAIL
-            to_email = [settings.DEFAULT_FROM_EMAIL]
+            to_email = [settings.CONTACT_EMAIL]
             message = EmailMessage(
                 subject, html_message, from_email, to_email, bcc_recipient_list
             )

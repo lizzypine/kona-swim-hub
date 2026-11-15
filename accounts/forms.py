@@ -1,5 +1,9 @@
+import json
 import logging
+from urllib.parse import urlencode
+from urllib.request import build_opener, ProxyHandler, Request
 
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
@@ -7,6 +11,7 @@ from django.forms import ModelForm
 from accounts.models import CustomUser
 from lessons.models import Learner
 from turnstile.fields import TurnstileField
+from turnstile import settings as turnstile_settings
 
 
 logger = logging.getLogger(__name__)
@@ -14,14 +19,61 @@ logger = logging.getLogger(__name__)
 
 class ResilientTurnstileField(TurnstileField):
     def validate(self, value):
+        if not getattr(settings, "TURNSTILE_ENABLE", turnstile_settings.ENABLE):
+            return
+        forms.Field.validate(self, value)
+        secret = settings.TURNSTILE_SECRET
+        payload = {"secret": secret, "response": value}
+        # Cloudflare expects an IP address when this optional parameter is sent.
+        if self.remote_ip:
+            payload["remoteip"] = self.remote_ip
+        request = Request(
+            getattr(settings, "TURNSTILE_VERIFY_URL", turnstile_settings.VERIFY_URL),
+            urlencode(payload).encode(),
+        )
         try:
-            super().validate(value)
+            opener = build_opener(ProxyHandler(
+                getattr(settings, "TURNSTILE_PROXIES", turnstile_settings.PROXIES)
+            ))
+            with opener.open(
+                request,
+                timeout=getattr(settings, "TURNSTILE_TIMEOUT", turnstile_settings.TIMEOUT),
+            ) as response:
+                result = json.loads(response.read().decode("utf-8"))
+            if not isinstance(result, dict) or not isinstance(result.get("success"), bool):
+                raise ValueError
         except (OSError, ValueError) as exc:
-            logger.exception("Turnstile verification request failed")
+            # Exception text/tracebacks may include request data or credentials.
+            logger.warning(
+                "Turnstile verification unavailable (%s error)",
+                "transport" if isinstance(exc, OSError) else "response",
+            )
             raise forms.ValidationError(
                 "Anti-spam verification is temporarily unavailable. Please try again.",
                 code="turnstile_unavailable",
-            ) from exc
+            ) from None
+
+        def safe_metadata(value, limit):
+            if not isinstance(value, str):
+                return ""
+            for sensitive in (secret, payload["response"]):
+                if sensitive:
+                    value = value.replace(sensitive, "[redacted]")
+            return value[:limit]
+
+        codes = result.get("error-codes", [])
+        codes = codes if isinstance(codes, list) else []
+        metadata = {
+            "success": result["success"],
+            "error-codes": [safe_metadata(code, 100) for code in codes[:10]],
+            "hostname": safe_metadata(result.get("hostname", ""), 253),
+        }
+        log = logger.info if result["success"] else logger.warning
+        log("Turnstile verification result: %s", json.dumps(metadata))
+        if not result["success"]:
+            raise forms.ValidationError(
+                self.error_messages["invalid_turnstile"], code="invalid_turnstile"
+            )
 
 
 class CustomUserCreationForm(UserCreationForm):

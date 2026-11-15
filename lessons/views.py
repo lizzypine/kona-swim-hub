@@ -105,7 +105,7 @@ class RegisterLearner(LoginRequiredMixin, UpdateView):
         html_message = render_to_string(
             html_template, {"user": user, "learner": learner, "course": course_title}
         )
-        email_from = "Kona Swim Hub <team@konaswimhub.com>"
+        email_from = settings.DEFAULT_FROM_EMAIL
         recipient_list = [(self.request.user.email)]
         send_mail(
             subject, html_message, email_from, recipient_list, fail_silently=False

@@ -58,6 +58,7 @@ SECRET_KEY = os.environ.get(
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "kona-swim-hub.service.local",
     ".konaswimhub.com",
     "konaswimhub.com",
     "kona-swim-hub-prod2.us-west-1.elasticbeanstalk.com",
@@ -96,6 +97,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "pages.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -236,5 +238,7 @@ EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
-CONTACT_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"
-DEFAULT_FROM_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "team@konaswimhub.com")
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", "Kona Swim Hub <team@notifications.konaswimhub.com>"
+)
