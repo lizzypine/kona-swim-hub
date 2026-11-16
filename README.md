@@ -48,3 +48,7 @@ For Lightsail, configure the container health check path as `/healthz/`. After t
 ## Inbound email forwarding
 
 The optional Resend webhook at `/webhooks/resend/` forwards mail received at the configured inbound address to a private `EMAIL_FORWARD_TO` destination. It verifies webhook signatures, persists deduplication state, and uses the existing verified sending domain without changing outgoing SMTP. See [setup, migration, deployment, and end-to-end testing](docs/resend-inbound-forwarding.md). Configure `RESEND_API_KEY`, `EMAIL_FORWARD_TO`, and `RESEND_WEBHOOK_SECRET` privately; the feature remains unavailable until configured.
+
+## Pull request checks
+
+GitHub Actions checks PRs into `main` and `develop` using SQLite and PostgreSQL tests, migration checks, and a deployment-image build. The `Required CI` check must pass before merging into protected `main`. See [CI behavior and merge protection](docs/ci.md).
