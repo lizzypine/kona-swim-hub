@@ -1,47 +1,66 @@
 from pathlib import Path
 from environs import Env
-from decouple import config
 import os
-import subprocess
-import ast
 
 env = Env()
 env.read_env()
 
 
-def get_environ_vars():
-    completed_process = subprocess.run(
-        ["/opt/elasticbeanstalk/bin/get-config", "environment"],
-        stdout=subprocess.PIPE,
-        text=True,
-        check=True,
-    )
+def split_csv(value):
+    return [item.strip() for item in (value or "").split(",") if item.strip()]
 
-    return ast.literal_eval(completed_process.stdout)
+
+def parse_proxy_header(value):
+    if not value:
+        return ("HTTP_X_FORWARDED_PROTO", "https")
+    if isinstance(value, tuple) and len(value) == 2:
+        return value
+    if isinstance(value, str):
+        header, sep, scheme = value.partition(":")
+        if sep:
+            return (header, scheme)
+    return ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Set the project base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 DEBUG = env.bool("DEBUG", default=False)
 
-# AWS EB
-SECRET_KEY = os.environ.get(
-    "SECRET_KEY",
+TURNSTILE_SITEKEY = os.getenv("TURNSTILE_SITEKEY") or (
+    "1x00000000000000000000AA" if DEBUG else ""
 )
+TURNSTILE_SECRET = os.getenv("TURNSTILE_SECRET") or (
+    "1x0000000000000000000000000000000AA" if DEBUG else ""
+)
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "kona-swim-hub.service.local",
     ".konaswimhub.com",
     "konaswimhub.com",
-    "kona-swim-hub-prod2.us-west-1.elasticbeanstalk.com",
 ]
+ALLOWED_HOSTS.extend(split_csv(os.getenv("ALLOWED_HOSTS", "")))
+ALLOWED_HOSTS.extend(split_csv(os.getenv("ALLOWED_HOSTS_EXTRA", "")))
+ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://konaswimhub.com",
+    "https://www.konaswimhub.com",
+    *split_csv(os.getenv("CSRF_TRUSTED_ORIGINS", "")),
+    *split_csv(os.getenv("CSRF_TRUSTED_ORIGINS_EXTRA", "")),
+]
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(CSRF_TRUSTED_ORIGINS))
+
+SECURE_PROXY_SSL_HEADER = parse_proxy_header(os.getenv("SECURE_PROXY_SSL_HEADER"))
 
 # Application definition
 INSTALLED_APPS = [
+    "inbound.apps.InboundConfig",
     "lessons.apps.LessonsConfig",
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -52,13 +71,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
-    "bootstrap5",
+    "django_bootstrap5",
+    "turnstile",
     "bootstrap_datepicker_plus",
     "django.forms",
     "crispy_forms",
 ]
 
 MIDDLEWARE = [
+    "pages.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -94,21 +115,16 @@ WSGI_APPLICATION = "kona-swim-hub.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if "RDS_HOSTNAME" in os.environ:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": os.environ["RDS_DB_NAME"],
-            "USER": os.environ["RDS_USERNAME"],
-            "PASSWORD": os.environ["RDS_PASSWORD"],
-            "HOST": os.environ["RDS_HOSTNAME"],
-            "PORT": os.environ["RDS_PORT"],
-        }
-    }
+DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 
-# Local database
-else:
-    DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+default_database = DATABASES["default"]
+if "postgresql" in default_database["ENGINE"]:
+    default_database["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
+    default_database["CONN_HEALTH_CHECKS"] = True
+    default_database.setdefault("DISABLE_SERVER_SIDE_CURSORS", True)
+
+    if default_database.get("HOST", "").endswith(".neon.tech"):
+        default_database.setdefault("OPTIONS", {}).setdefault("sslmode", "require")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -145,17 +161,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
-
-if "AWS_STORAGE_BUCKET_NAME" in os.environ:
-    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-    AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
-    AWS_S3_REGION_NAME = os.environ["AWS_S3_REGION_NAME"]
-
-    AWS_S3_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
-    AWS_S3_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+STATIC_ROOT = os.getenv("STATIC_ROOT", os.path.join(BASE_DIR, "..", "www", "static"))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -175,12 +181,35 @@ AUTH_PROFILE_MODULE = "accounts.UserProfile"
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_API_KEY")
-CONTACT_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"
-DEFAULT_FROM_EMAIL = "Kona Swim Hub <team@konaswimhub.com>"
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend"
+    if DEBUG
+    else "django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "team@konaswimhub.com")
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", "Kona Swim Hub <team@notifications.konaswimhub.com>"
+)
+
+# Inbound forwarding uses the HTTP API independently of existing outgoing SMTP.
+RESEND_API_KEY = os.getenv("RESEND_API_KEY") or (
+    EMAIL_HOST_PASSWORD if EMAIL_HOST.lower() == "smtp.resend.com" else ""
+)
+RESEND_WEBHOOK_SECRET = os.getenv("RESEND_WEBHOOK_SECRET", "")
+EMAIL_FORWARD_TO = os.getenv("EMAIL_FORWARD_TO", "")
+RESEND_INBOUND_ADDRESS = os.getenv("RESEND_INBOUND_ADDRESS", "team@ilkaxle.resend.app")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"inbound_console": {"class": "logging.StreamHandler"}},
+    "loggers": {"inbound": {"handlers": ["inbound_console"], "level": "INFO", "propagate": False}},
+}
