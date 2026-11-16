@@ -8,7 +8,5 @@ infra/cdk.context.json
 __pycache__/
 db.sqlite3
 .DS_Store
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+# Local legacy deployment metadata
+.elasticbeanstalk/

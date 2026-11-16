@@ -1,4 +1,6 @@
 .git
+.ebextensions
+.elasticbeanstalk
 .venv
 venv
 .env*

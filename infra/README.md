@@ -1,6 +1,8 @@
 # Lightsail CDK deployment
 
-This CDK app provisions the Lightsail Container Service in `us-west-2`. It does not modify the existing Elastic Beanstalk environment, Neon database, or DNS. The service's current application image and runtime settings are managed through the Lightsail console. Do not run `cdk deploy` until the stack definition has been updated to match the active image, public endpoint, and runtime configuration; otherwise it can replace the console-managed deployment and its settings.
+This CDK app provisions the Lightsail Container Service in `us-west-2`. The Neon database and DNS are managed separately. The service's current application image and runtime settings are managed through the Lightsail console. Do not run `cdk deploy` until the stack definition has been updated to match the active image, public endpoint, and runtime configuration; otherwise it can replace the console-managed deployment and its settings.
+
+The commands below use the existing AWS CLI profile named `eb-cli` to authenticate to Lightsail. The profile name can stay the same across hosting migrations.
 
 ## Synthesize and review
 
