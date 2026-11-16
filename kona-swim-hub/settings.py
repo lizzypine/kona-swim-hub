@@ -79,6 +79,7 @@ SECURE_PROXY_SSL_HEADER = parse_proxy_header(os.getenv("SECURE_PROXY_SSL_HEADER"
 
 # Application definition
 INSTALLED_APPS = [
+    "inbound.apps.InboundConfig",
     "lessons.apps.LessonsConfig",
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -242,3 +243,18 @@ CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "team@konaswimhub.com")
 DEFAULT_FROM_EMAIL = os.getenv(
     "DEFAULT_FROM_EMAIL", "Kona Swim Hub <team@notifications.konaswimhub.com>"
 )
+
+# Inbound forwarding uses the HTTP API independently of existing outgoing SMTP.
+RESEND_API_KEY = os.getenv("RESEND_API_KEY") or (
+    EMAIL_HOST_PASSWORD if EMAIL_HOST.lower() == "smtp.resend.com" else ""
+)
+RESEND_WEBHOOK_SECRET = os.getenv("RESEND_WEBHOOK_SECRET", "")
+EMAIL_FORWARD_TO = os.getenv("EMAIL_FORWARD_TO", "")
+RESEND_INBOUND_ADDRESS = os.getenv("RESEND_INBOUND_ADDRESS", "team@ilkaxle.resend.app")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"inbound_console": {"class": "logging.StreamHandler"}},
+    "loggers": {"inbound": {"handlers": ["inbound_console"], "level": "INFO", "propagate": False}},
+}
