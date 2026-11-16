@@ -42,3 +42,7 @@ Open http://localhost:8000. The `/healthz/` endpoint is available for container 
 The Compose service targets `linux/amd64` for Lightsail Container Services. The Lightsail deployment needs `SECRET_KEY`, `DATABASE_URL`, the Lightsail hostname in `ALLOWED_HOSTS_EXTRA`, and any production email and Turnstile settings. Put HTTPS origins in `CSRF_TRUSTED_ORIGINS_EXTRA` including the `https://` scheme.
 
 For Lightsail, configure the container health check path as `/healthz/`. After the service is running, create and DNS-validate a Lightsail certificate for `konaswimhub.com` and `www.konaswimhub.com`, attach it to the service, and add domain assignments. Update DNS only after the new service passes testing; record targets are provided by Lightsail and depend on where DNS is hosted.
+
+## Inbound email forwarding
+
+The optional Resend webhook at `/webhooks/resend/` forwards mail received at the configured inbound address to a private `EMAIL_FORWARD_TO` destination. It verifies webhook signatures, persists deduplication state, and uses the existing verified sending domain without changing outgoing SMTP. See [setup, migration, deployment, and end-to-end testing](docs/resend-inbound-forwarding.md). Configure `RESEND_API_KEY`, `EMAIL_FORWARD_TO`, and `RESEND_WEBHOOK_SECRET` privately; the feature remains unavailable until configured.
