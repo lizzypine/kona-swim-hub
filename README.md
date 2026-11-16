@@ -1,5 +1,7 @@
 Kona Swim Hub is a space for families based in Kona, Hawaii to find and sign up for swim lessons for their kids and for Kona-based instructors to post swim classes.
 
+Coding agents should read [AGENTS.md](AGENTS.md) for project conventions, validation commands, and operational guidance.
+
 The problem this app solves: Many local swim instructors have too small of a presence to justify creating
 their own website. Because of this, families use word of mouth to find group swim lessons. Swim lessons must be specific to the the learner's age, ability level, schedule, location, etc., so it is common for a lot of back-and-forth to take place between instructors and families just to
 get a child enrolled in a swim course. Kona Swim Hub seeks to streamline this process.
